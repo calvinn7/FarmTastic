@@ -8,7 +8,7 @@
 
 | Name                   | Matric Number |
 |------------------------|:-------------:|
-| Calvin Jee Meng Yau    |   22057003    |
+| CALVIN JEE MENG YAU    |   22057003    |
 | TAN HUEY LING          |   22004728    |
 | RACHEL TEOH REI GEE    |   22004780    |
 | GOH YAN HAN            |   22004848    |
