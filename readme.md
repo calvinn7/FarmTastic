@@ -8,7 +8,7 @@
 
 | Name                   | Matric Number |
 |------------------------|:-------------:|
-| Calvin Jee Meng Yau    |   22057003    |
+| CALVIN JEE MENG YAU    |   22057003    |
 | TAN HUEY LING          |   22004728    |
 | RACHEL TEOH REI GEE    |   22004780    |
 | GOH YAN HAN            |   22004848    |
@@ -21,12 +21,11 @@
 - Raise awareness among farmers, facilitating informed decision making and promoting climate-smart farming practices for reduced environmental impact.
 
 ### 🎉 PROJECT OBJECTIVES
-1. Increase the number of active users on the FarmTastic app by 20% within the first six months after launch.
-2. Help users reduce their carbon footprint by 15% in the first year of app usage.
-3. Ensure that 70% of farmers actively use the real-time weather and climate data for decision-making within the first year.
-4. Facilitate connections with climate-friendly markets for 50% of app users within the first year.
-5. Maintain a user satisfaction rate of 80% or higher, based on regular user surveys and feedback.
-6. Maintain an accuracy rate of 90% or higher for real-time weather and climate data.
+1. To develop a functional Android application, aimed at helping farmers effectively plan and manage their agricultural activities while promoting climate-smart and sustainable farming practices by the end of Week 8.
+2. To develop an algorithm to calculate the user's carbon footprint by the end of Week 2 of the project timeline.
+3. To integrate real-time climate data and forecasted weather information by the end of  Week 4 of the project timeline.
+4. To implement a farming calendar system for users to plan and track their progress by the end of Week 7 of the project timeline.
+
 
 ### 🌍 PROJECT SCOPE
 #### Product Scope Description
