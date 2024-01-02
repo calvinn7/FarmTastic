@@ -2,7 +2,10 @@ import 'package:weather_forecast/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
+import 'package:weather_forecast/pages/home.dart';
 import 'search_page.dart';
+import 'alerts_page.dart';
+import 'home.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -43,11 +46,21 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFE7F7D3),
+      backgroundColor: const Color(0xFFE7F7D3),
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
-        title: Text('Weather Forecast'),
+        title: const Text('Weather Forecast'),
         actions: [
+      IconButton(
+      icon: const Icon(Icons.notifications),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => WeatherAlertsPage()),
+        );
+      },
+      ),
+
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
@@ -69,15 +82,68 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Center(
                 child: Text(
-                  'Weather App',
+                  'FarmTastic',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 24,
+
                   ),
                 ),
               ),
             ),
-            // Add more items to the drawer if needed
+            ListTile(
+              title: Text('Home'),
+              onTap: () {
+                // Navigate back to the home page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              },
+            ),
+
+            ListTile(
+              title: Text('Weather'),
+              onTap: () {
+                // Navigate to Weather page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Farming Calendar'),
+              onTap: () {
+                // Navigate to Weather page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              },
+            ),
+
+            ListTile(
+              title: Text('Carbon Calculator'),
+              onTap: () {
+                // Navigate to Weather page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              },
+            ),
+
+            ListTile(
+              title: Text('Community'),
+              onTap: () {
+                // Navigate to Weather page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -110,8 +176,15 @@ class _HomePageState extends State<HomePage> {
         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
         _extraInfo(),
         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+        const Text(
+          'Today Forecast',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         _hourlyForecastList(), // Display the weather forecast
-        Text(
+        const Text(
           'Daily Forecast',
           style: TextStyle(
             fontSize: 20,
