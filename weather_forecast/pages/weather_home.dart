@@ -7,14 +7,14 @@ import 'search_page.dart';
 import 'alerts_page.dart';
 import 'home.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class WeatherHome extends StatefulWidget {
+  const WeatherHome({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<WeatherHome> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<WeatherHome> {
   final WeatherFactory _wf = WeatherFactory(OPENWEATHER_API_KEY);
 
   Weather? _currentWeather;
