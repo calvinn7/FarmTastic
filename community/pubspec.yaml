@@ -1,0 +1,37 @@
+name: madass
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^2.24.0
+  cloud_firestore: ^4.13.3
+  http: ^0.13.3
+  news_api_flutter_package: ^1.1.0
+  flutter_webview_plugin: ^0.4.0
+  page_transition: ^2.1.0
+  firebase_auth: ^4.15.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
+  assets: 
+    - "assets/apple.png"
+    - "assets/banana.png"
+    - "assets/cabbage.png"
+    - "assets/corn.png"
+    - "assets/onion.png"
+    - "assets/papaya.png"
+    - "assets/potato.png"
+    - "assets/tomato.png"
+    - "assets/wheat.png"
+
