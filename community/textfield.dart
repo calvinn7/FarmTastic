@@ -23,8 +23,7 @@ class MyTextField extends StatelessWidget {
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.blueGrey),
         ),
-       ),
+      ),
     );
-    }
   }
-
+}
