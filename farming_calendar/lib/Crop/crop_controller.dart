@@ -29,9 +29,4 @@ class CropController extends GetxController {
     DbHelper.delete(crop);
     getCrops();
   }
-
-  // void markTaskCompleted(int id) async {
-  //   await DbHelper.update(id);
-  //   getCrops();
-  // }
 }

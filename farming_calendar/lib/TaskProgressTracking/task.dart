@@ -19,7 +19,7 @@ class Task {
     this.remind,
   });
 
-  Task.fromJson(Map<String, dynamic> json){
+  Task.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'].toString();
     note = json['note'].toString();

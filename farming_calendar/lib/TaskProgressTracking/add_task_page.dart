@@ -1,11 +1,11 @@
 import 'package:farmtastic/TaskProgressTracking/task.dart';
 import 'package:farmtastic/TaskProgressTracking/task_controller.dart';
-import 'package:farmtastic/inputText.dart';
+import 'package:farmtastic/services/inputText.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-import '../theme.dart';
+import '../services/theme.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({Key? key}) : super(key: key);
@@ -29,17 +29,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: _appBar(),
       body: Container(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Add Task",
-                style: headingStyle,
-              ),
               SizedBox(
                 height: 20,
               ),
@@ -124,8 +120,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   }).toList(),
                 ),
               ),
-
-              // color 1.50.00
               Row(
                 children: [
                   Container(
@@ -133,6 +127,17 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(15.0),
                       color: Colors.lightGreen,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          // Set the shadow color
+                          spreadRadius: 2,
+                          // Set the spread radius of the shadow
+                          blurRadius: 5,
+                          // Set the blur radius of the shadow
+                          offset: Offset(0, 3), // Set the offset of the shadow
+                        ),
+                      ],
                     ),
                     margin: const EdgeInsets.only(top: 100.0, left: 310.0),
                     child: SizedBox(
@@ -172,14 +177,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _addTaskToDb() async {
     int value = await _taskController.addTask(
         task: Task(
-          note: _noteController.text,
-          title: _titleController.text,
-          date: DateFormat.yMd().format(_selectedDate),
-          startTime: _startTime,
-          endTime: _endTime,
-          remind: _selectedRemind,
-          isCompleted: 0,
-        ));
+      note: _noteController.text,
+      title: _titleController.text,
+      date: DateFormat.yMd().format(_selectedDate),
+      startTime: _startTime,
+      endTime: _endTime,
+      remind: _selectedRemind,
+      isCompleted: 0,
+    ));
     print("My id is " + "$value");
   }
 
@@ -223,5 +228,18 @@ class _AddTaskPageState extends State<AddTaskPage> {
           hour: int.parse(_startTime.split(":")[0]),
           minute: int.parse(_startTime.split(":")[1].split(" ")[0]),
         ));
+  }
+
+  _appBar() {
+    return AppBar(
+      title: const Text("Add Task"),
+      backgroundColor: const Color(0xFFF9FFDF),
+      centerTitle: true,
+      titleTextStyle: const TextStyle(
+        color: Color(0xFF567D01),
+        fontSize: 20.0, // Set the text size
+        fontWeight: FontWeight.w900, // Set the font weight
+      ),
+    );
   }
 }

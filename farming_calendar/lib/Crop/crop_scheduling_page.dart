@@ -1,21 +1,17 @@
 import 'package:farmtastic/Crop/crop_controller.dart';
-import 'package:farmtastic/calendar_model.dart';
-import 'package:farmtastic/clean_calendar_controller.dart';
-import 'package:farmtastic/CropScheduling/crop_model.dart';
+import 'package:farmtastic/Calendar/calendar_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:farmtastic/scrollable_calendar.dart';
+import 'package:farmtastic/Calendar/scrollable_calendar.dart';
 import 'package:scrollable_clean_calendar/utils/enums.dart';
 
-import '../theme.dart';
+import '../Calendar/clean_calendar_controller.dart';
+import '../services/theme.dart';
 import 'crop.dart';
 
 class CropSchedulingPage extends StatefulWidget {
-  const CropSchedulingPage({Key? key}) : super(key: key);
-
   @override
   _CropSchedulingPageState createState() => _CropSchedulingPageState();
 }
@@ -25,11 +21,6 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
   String cropName = '';
   int duration = 30; // Default duration in days
   int _selectedColor = 0;
-  String _start = '';
-  String _end = '';
-
-  // TextEditingController _start = TextEditingController();
-  // TextEditingController _end = TextEditingController();
 
   final calendarController = CleanCalendarController(
     minDate: DateTime.now(),
@@ -38,15 +29,22 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
     ),
     weekdayStart: DateTime.monday,
   );
+  DateTime? _start = DateTime.now();
+  DateTime? _end = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _cropController.getCrops();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Listen to first and second date then update to text controller
-    // _start.text = DateFormat.yMd()
-    //     .format(Provider.of<CalendarModel>(context, listen: true).firstDate);
-    // _end.text = DateFormat.yMd()
-    //     .format(Provider.of<CalendarModel>(context, listen: true).secondDate);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("CROP SCHEDULING"),
@@ -194,24 +192,6 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
                         style: titleStyle,
                       ),
                       const SizedBox(width: 15),
-                      // Container(
-                      //   width: 100.0,
-                      //   height: 34.0,
-                      //   child: Expanded(
-                      //     child: TextFormField(
-                      //       decoration: InputDecoration(
-                      //         contentPadding: EdgeInsets.only(
-                      //             left: 5, right: 5,bottom: 15),
-                      //       ),
-                      //       readOnly: true,
-                      //       controller: _start,
-                      //       onTap: () => Navigator.of(context).push(
-                      //           MaterialPageRoute(
-                      //               builder: (_) => const CropSchedulingPage())),
-                      //     ),
-                      //   ),
-                      //
-                      // ),
                     ],
                   ),
                   const SizedBox(
@@ -258,40 +238,7 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
           builder: ((context, calendar, child) {
             return FloatingActionButton(
               onPressed: () {
-                // Check if crop name is filled and start date is selected
-                if (cropName.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Please fill in the crop name"),
-                    ),
-                  );
-                } else if (calendarController.rangeMinDate == null ||
-                    calendarController.rangeMaxDate == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Please select the date range"),
-                    ),
-                  );
-                } else {
-                  _start =
-                      DateFormat.yMd().format(calendarController.rangeMinDate!);
-                  _end =
-                      DateFormat.yMd().format(calendarController.rangeMaxDate!);
-
-                  _addCropToDB();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Crop is scheduled"),
-                    ),
-                  );
-                  // Pass selected date and notify all levels of the app using provider
-                  calendar.getDateRange(
-                    calendarController.rangeMinDate!,
-                    calendarController.rangeMaxDate!,
-                  );
-
-                  Navigator.of(context).pop();
-                }
+                _validate();
               },
               backgroundColor: Colors.lightGreen,
               mini: true,
@@ -303,16 +250,51 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
     );
   }
 
+  _validate() {
+    if (cropName.isEmpty &&
+        calendarController.rangeMinDate == null &&
+        calendarController.rangeMaxDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("All fields are required!"),
+        ),
+      );
+    } else if (cropName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please fill in the plant name"),
+        ),
+      );
+    } else if (calendarController.rangeMinDate == null ||
+        calendarController.rangeMaxDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please select the date range"),
+        ),
+      );
+    } else if (calendarController.rangeMinDate != null &&
+        calendarController.rangeMaxDate != null) {
+      _start = calendarController.rangeMinDate;
+      _end = calendarController.rangeMaxDate;
+      _addCropToDB();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Crop is scheduled"),
+        ),
+      );
+      Navigator.of(context).pop();
+    }
+  }
+
   _addCropToDB() async {
     int value = await _cropController.addCrop(
-      crop: Crop(
-        plant: cropName,
-        duration: duration,
-        color: _selectedColor,
-        startDate: _start,
-        endDate: _end,
-      )
-    );
+        crop: Crop(
+      plant: cropName,
+      duration: duration,
+      color: _selectedColor,
+      startDate: _start != null ? DateFormat.yMd().format(_start!) : '',
+      endDate: _end != null ? DateFormat.yMd().format(_end!) : '',
+    ));
     print("Crop id is " + "$value");
   }
 
@@ -350,4 +332,3 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
     );
   }
 }
-//2.14.02

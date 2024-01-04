@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'package:farmtastic/Crop/crop_controller.dart';
 import 'package:farmtastic/TaskProgressTracking/task_controller.dart';
-import 'package:farmtastic/theme.dart';
+import 'package:farmtastic/services/theme.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get.dart';
@@ -11,11 +10,8 @@ import 'package:intl/intl.dart';
 
 import 'Crop/crop_scheduling_page.dart';
 import 'Crop/view_schedules.dart';
-import 'CropScheduling/crop_scheduling.dart';
 import 'TaskProgressTracking/add_task_page.dart';
-import 'CropScheduling/event.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'TaskProgressTracking/task.dart';
@@ -28,8 +24,6 @@ class FarmingCalendar extends StatefulWidget {
 }
 
 class _FarmingCalendarState extends State<FarmingCalendar> {
-  // late Map<DateTime, List<Event>> selectedEvents;
-  // late SharedPreferences prefs;
   late NotifyHelper notifyHelper;
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
@@ -37,73 +31,18 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
   final _taskController = Get.put(TaskController());
   final _cropController = Get.put(CropController());
 
-  // TextEditingController _eventController = TextEditingController();
-
   @override
   void initState() {
-    // selectedEvents = {};
-    // Set selectedDay to the current day when the widget is initialized
-    selectedDay = DateTime.now();
     super.initState();
+    selectedDay = DateTime.now();
     notifyHelper = NotifyHelper();
     notifyHelper.requestNotificationPermissions();
     _taskController.getTasks();
-    // loadTasks();
+    _cropController.getCrops();
   }
-
-  // Future<void> loadTasks() async {
-  //   prefs = await SharedPreferences.getInstance();
-  //   String? jsonString = prefs.getString('tasks');
-  //
-  //   if (jsonString != null) {
-  //     Map<String, dynamic> tasksMap = json.decode(jsonString);
-  //     selectedEvents = tasksMap.map(
-  //       (key, value) => MapEntry(
-  //         DateTime.parse(key),
-  //         (value as List<dynamic>)
-  //             .map((eventJson) => Event.fromJson(eventJson))
-  //             .toList(),
-  //       ),
-  //     );
-  //   }
-  //   setState(() {});
-  // }
-  //
-  // Future<void> saveTasks() async {
-  //   Map<String, dynamic> serializedEvents = selectedEvents.map(
-  //     (key, value) => MapEntry(
-  //       key.toIso8601String(),
-  //       value.map((event) => event.toJson()).toList(),
-  //     ),
-  //   );
-  //   String jsonString = json.encode(serializedEvents);
-  //   await prefs.setString('tasks', jsonString);
-  // }
-  //
-  // List<Event> _getAllUpcomingEvents() {
-  //   List<Event> allEvents = [];
-  //   for (var eventsList in selectedEvents.values) {
-  //     allEvents.addAll(eventsList);
-  //   }
-  //   return allEvents;
-  // }
-  //
-  // List<Event> _getEventsFromDay(DateTime date) {
-  //   return selectedEvents[date] ?? [];
-  // }
-
-  // TextStyle? _getTextStyle(bool checked) {
-  //   if (!checked) return null;
-  //
-  //   return TextStyle(
-  //     color: Colors.grey,
-  //     decoration: TextDecoration.lineThrough,
-  //   );
-  // }
 
   @override
   void dispose() {
-    // _eventController.dispose();
     super.dispose();
   }
 
@@ -118,47 +57,24 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
               decoration: BoxDecoration(
                 color: const Color(0xFFDDECCB),
                 borderRadius: BorderRadius.circular(20.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5), // Set the shadow color
+                    spreadRadius: 5, // Set the spread radius of the shadow
+                    blurRadius: 7, // Set the blur radius of the shadow
+                    offset: Offset(0, 3), // Set the offset of the shadow
+                  ),
+                ],
               ),
-              margin: const EdgeInsets.only(left: 20.0, top: 10.0, right: 20.0),
+              margin: const EdgeInsets.only(
+                  left: 20.0, top: 10.0, right: 20.0, bottom: 10),
               child: Column(
                 children: [
                   Row(
                     children: [
-                      // Align(
-                      //   child: Container(
-                      //     margin: const EdgeInsets.only(top: 1.0, left: 10.0),
-                      //     child: ElevatedButton(
-                      //       onPressed: () {
-                      //         Navigator.push(
-                      //           context,
-                      //           MaterialPageRoute(
-                      //               builder: (context) => Tasks()),
-                      //         );
-                      //       },
-                      //       style: ButtonStyle(
-                      //         backgroundColor: MaterialStateProperty.all<Color>(
-                      //             Colors.lightGreen),
-                      //         shape: MaterialStateProperty.all<
-                      //             RoundedRectangleBorder>(
-                      //           RoundedRectangleBorder(
-                      //             borderRadius: BorderRadius.circular(
-                      //                 15.0), // Set your desired border radius
-                      //           ),
-                      //         ),
-                      //         textStyle: MaterialStateProperty.all<TextStyle>(
-                      //           TextStyle(
-                      //             color: Color(0xFF557C02),
-                      //             fontWeight: FontWeight.bold,
-                      //           ),
-                      //         ),
-                      //       ),
-                      //       child: Text('Upcoming Tasks'),
-                      //     ),
-                      //   ),
-                      // ),
                       Align(
                         child: Container(
-                          width:270,
+                          width: 270,
                           margin: const EdgeInsets.only(top: 10.0, left: 15.0),
                           child: ElevatedButton(
                             onPressed: () async {
@@ -194,12 +110,12 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
                             borderRadius: BorderRadius.circular(15.0),
                             color: Colors.lightGreen,
                           ),
-                          margin: const EdgeInsets.only(top: 10.0, left:10),
+                          margin: const EdgeInsets.only(top: 10.0, left: 10),
                           child: SizedBox(
                             width: 40.0,
                             height: 40.0,
                             child: IconButton(
-                              onPressed: () async{
+                              onPressed: () async {
                                 await Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -234,8 +150,6 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
                       return isSameDay(selectedDay, date);
                     },
 
-                    // eventLoader: _getEventsFromDay,
-
                     //To style the Calendar
                     calendarStyle: const CalendarStyle(
                       isTodayHighlighted: true,
@@ -259,6 +173,11 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
                       formatButtonVisible: false,
                       titleCentered: true,
                     ),
+
+                    // Add the eventLoader property
+                    eventLoader: (date) {
+                      return _getEventsForDay(date);
+                    },
                   ),
                 ],
               )),
@@ -271,6 +190,14 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
               decoration: BoxDecoration(
                 color: const Color(0xFF8A9D5F),
                 borderRadius: BorderRadius.circular(20.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5), // Set the shadow color
+                    spreadRadius: 5, // Set the spread radius of the shadow
+                    blurRadius: 7, // Set the blur radius of the shadow
+                    offset: Offset(0, 3), // Set the offset of the shadow
+                  ),
+                ],
               ),
               child: Stack(
                 children: [
@@ -301,7 +228,6 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
                           ),
                         ],
                       ),
-
                       Container(
                         height: 180.0, // Set the desired height
                         child: Column(
@@ -310,31 +236,6 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
                           ],
                         ),
                       ),
-
-                      // child: ListView.builder(
-                      // shrinkWrap: true,
-                      // itemCount: _getEventsFromDay(selectedDay).length,
-                      // itemBuilder: (context, index) {
-                      //   Event event = _getEventsFromDay(selectedDay)[index];
-                      //   return TaskWidget(
-                      //       event: event, selectedDay: selectedDay);
-                      // },
-                      // ),
-                      // ),
-
-                      // Show all upcoming tasks when no specific day is selected
-                      // if (selectedDay == null)
-                      //   Container(
-                      //     child: ListView.builder(
-                      //       shrinkWrap: true,
-                      //       itemCount: _getAllUpcomingEvents().length,
-                      //       itemBuilder: (context, index) {
-                      //         Event event = _getAllUpcomingEvents()[index];
-                      //         return TaskWidget(
-                      //             event: event, selectedDay: selectedDay);
-                      //       },
-                      //     ),
-                      //   ),
                     ],
                   ),
                   Positioned(
@@ -350,65 +251,6 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
                           );
                           _taskController.getTasks();
                         },
-                        //     () => showDialog(
-                        //   context: context,
-                        //   builder: (context) => AlertDialog(
-                        //     title: Text("Task"),
-                        //     content: TextFormField(
-                        //       controller: _eventController,
-                        //     ),
-                        //     actions: [
-                        //       Row(
-                        //         children: [
-                        //           TextButton(
-                        //             child: Text("Clear Tasks"),
-                        //             onPressed: () {
-                        //               if (selectedEvents[selectedDay] != null) {
-                        //                 selectedEvents[selectedDay]
-                        //                     ?.removeWhere(
-                        //                         (item) => item.checked == true);
-                        //               }
-                        //               Navigator.pop(context);
-                        //               _eventController.clear();
-                        //               setState(() {});
-                        //               return;
-                        //             },
-                        //           ),
-                        //           TextButton(
-                        //             child: Text("Add"),
-                        //             onPressed: () {
-                        //               if (_eventController.text.isNotEmpty) {
-                        //                 if (selectedEvents[selectedDay] !=
-                        //                     null) {
-                        //                   selectedEvents[selectedDay]?.add(
-
-                        //                     Event(
-                        //                         title: _eventController.text,
-                        //                         checked: false),
-                        //                   );
-                        //                 } else {
-                        //                   selectedEvents[selectedDay] = [
-                        //                     Event(
-                        //                         title: _eventController.text,
-                        //                         checked: false)
-                        //                   ];
-                        //                 }
-                        //               }
-                        //               Navigator.pop(context);
-                        //               _eventController.clear();
-                        //               setState(() {});
-                        //               return;
-                        //             },
-                        //           ),
-                        //           TextButton(
-                        //             child: Text("Cancel"),
-                        //             onPressed: () => Navigator.pop(context),
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
                             Color.fromRGBO(169, 180, 144, 1.0),
@@ -440,6 +282,15 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
         ],
       ),
     );
+  }
+
+  List<dynamic> _getEventsForDay(DateTime date) {
+    // Get a list of events/tasks for the specified date
+    List<dynamic> events = _taskController.taskList
+        .where((task) => task.date == DateFormat.yMd().format(date))
+        .toList();
+
+    return events;
   }
 
   _appBar() {
@@ -486,10 +337,6 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
                     int.parse(myTime.split(":")[0]),
                     int.parse(myTime.split(":")[1]),
                     task);
-
-                // DateTime date = DateFormat.jm().parse(task.startTime.toString());
-                // var myTime = DateFormat("HH:mm").format(date);
-                // print(myTime);
 
                 return AnimationConfiguration.staggeredList(
                     position: index,
@@ -606,72 +453,4 @@ class _FarmingCalendarState extends State<FarmingCalendar> {
       ),
     );
   }
-
-// class TaskWidget extends StatefulWidget {
-//   final Event event;
-//   final DateTime selectedDay;
-//
-//   const TaskWidget({Key? key, required this.event, required this.selectedDay})
-//       : super(key: key);
-//
-//   @override
-//   _TaskWidgetState createState() => _TaskWidgetState();
-// }
-//
-// class _TaskWidgetState extends State<TaskWidget> {
-//   late Event event;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     event = widget.event;
-//   }
-//
-//   @override
-//   void didUpdateWidget(covariant TaskWidget oldWidget) {
-//     super.didUpdateWidget(oldWidget);
-//     if (widget.selectedDay != oldWidget.selectedDay) {
-//       setState(() {
-//         // Update the event when the selected day changes
-//         event = Event(title: widget.event.title, checked: widget.event.checked);
-//       });
-//     }
-//   }
-
-// @override
-// Widget build(BuildContext context) {
-//   return Container(
-//     decoration: const BoxDecoration(
-//       color: Color.fromRGBO(217, 217, 217, 0.4),
-//     ),
-//     margin: const EdgeInsets.only(top: 7.0),
-//     height: 40.0,
-//     child: ListTile(
-//       contentPadding:
-//       const EdgeInsets.symmetric(vertical: 0.1, horizontal: 20.0),
-//       onTap: () {
-//         // Handle task tap
-//         // setState(() {
-//         //   event.checked = !event.checked;
-//         // });
-//         //
-//         // // You can add additional logic here
-//         // ScaffoldMessenger.of(context).showSnackBar(
-//         //   SnackBar(
-//         //     content: Text(
-//         //         "${event.title} ${event.checked ? 'completed' : 'incomplete'}"),
-//         //   ),
-//         // );
-//       },
-//       // title: Text(
-//       //   event.title,
-//       //   style: TextStyle(
-//       //     decoration: event.checked ? TextDecoration.lineThrough : null,
-//       //   ),
-//       // ),
-//     ),
-//   );
-// }
 }
-//11.35
-//1.07.40

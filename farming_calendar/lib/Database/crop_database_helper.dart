@@ -1,9 +1,8 @@
-
 import 'package:sqflite/sqflite.dart';
 
 import '../Crop/crop.dart';
 
-class DbHelper{
+class DbHelper {
   static Database? _db;
   static final int _version = 1;
   static final String _tableName = "crops";
@@ -21,9 +20,9 @@ class DbHelper{
           print("creating");
           return db.execute(
             "CREATE TABLE $_tableName("
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                "plant STRING, duration INTEGER, color INTEGER, "
-                "startDate STRING, endDate STRING, ",
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "plant STRING, duration INTEGER, color INTEGER, "
+            "startDate STRING, endDate STRING)",
           );
         },
       );
@@ -45,13 +44,4 @@ class DbHelper{
   static delete(Crop crop) async {
     return await _db!.delete(_tableName, where: 'id=?', whereArgs: [crop.id]);
   }
-  //
-  // static update(int id) async{
-  //   return await _db!.rawUpdate('''
-  //   UPDATE crops
-  //   SET isCompleted =?
-  //   WHERE id =?
-  //
-  //   ''',[1, id]);
-  // }
 }

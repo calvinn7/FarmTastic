@@ -14,7 +14,6 @@ class TaskTile extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(top: 7.0),
         padding: EdgeInsets.all(5),
-        //  width: SizeConfig.screenWidth * 0.78,
         decoration: const BoxDecoration(
           color: Color.fromRGBO(217, 217, 217, 0.4),
         ),

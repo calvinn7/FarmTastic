@@ -16,13 +16,13 @@ class Crop {
     this.endDate,
   });
 
-  Crop.fromJson(Map<String, dynamic> json){
+  Crop.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     plant = json['plant'].toString();
     duration = json['duration'];
     color = json['color'];
-    startDate = json['startTime'];
-    endDate = json['endTime'];
+    startDate = json['startDate'];
+    endDate = json['endDate'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,8 +31,8 @@ class Crop {
     data['plant'] = this.plant;
     data['duration'] = this.duration;
     data['color'] = this.color;
-    data['startTime'] = this.startDate;
-    data['endTime'] = this.endDate;
+    data['startDate'] = this.startDate;
+    data['endDate'] = this.endDate;
 
     return data;
   }

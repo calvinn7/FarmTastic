@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 
-import '../theme.dart';
+import '../services/theme.dart';
 import 'crop.dart';
 import 'crop_tile.dart';
 
@@ -18,7 +18,6 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
   @override
   void initState() {
     super.initState();
-    _cropController.getCrops();
   }
 
   @override
@@ -27,7 +26,9 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
       appBar: _appBar(),
       body: Column(
         children: [
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           _showCrops(),
         ],
       ),
@@ -71,7 +72,7 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
                       ),
                     ),
                   ));
-        });
+            });
       }),
     );
   }
@@ -98,7 +99,7 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
                     )),
                 Spacer(),
                 _bottomSheetButton(
-                  label: "Delete Task",
+                  label: "Delete Schedule",
                   onTap: () {
                     _cropController.delete(crop);
                     Navigator.of(context).pop();
@@ -149,55 +150,10 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
           child: Text(
             label,
             style:
-            isClose ? titleStyle : titleStyle.copyWith(color: Colors.white),
+                isClose ? titleStyle : titleStyle.copyWith(color: Colors.white),
           ),
         ),
       ),
     );
   }
-//7.51
-// _showTasks() {
-//   return Expanded(
-//     child: Obx(() {
-//       return ListView.builder(
-//           itemCount: _cropController.cropList.length,
-//           itemBuilder: (_, index) {
-//             Crop crop = _cropController.cropList[index];
-//             print(crop.toJson());
-//             // if (crop.date == DateFormat.yMd().format(selectedDay)) {
-//             //   DateTime date =
-//             //   DateFormat("h:mm a").parse(crop.startTime.toString());
-//             //   String myTime = DateFormat("HH:mm").format(date);
-//             //   print(myTime);
-//             //   notifyHelper.scheduledNotification(
-//             //       int.parse(myTime.split(":")[0]),
-//             //       int.parse(myTime.split(":")[1]),
-//             //       crop);
-//
-//               // DateTime date = DateFormat.jm().parse(crop.startTime.toString());
-//               // var myTime = DateFormat("HH:mm").format(date);
-//               // print(myTime);
-//
-//               return AnimationConfiguration.staggeredList(
-//                   position: index,
-//                   child: SlideAnimation(
-//                     child: FadeInAnimation(
-//                       child: Row(
-//                         children: [
-//                           GestureDetector(
-//                               onTap: () {
-//                                 // _showBottomSheet(context, crop);
-//                               },
-//                               child: CropTile(crop))
-//                         ],
-//                       ),
-//                     ),
-//                   ));
-//             } else {
-//               return Container();
-//             }
-//           });
-//     }),
-//   );
-// }
 }
