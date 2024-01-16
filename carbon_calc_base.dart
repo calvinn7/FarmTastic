@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 abstract class CarbonCalculatorBase extends StatefulWidget {
-  const CarbonCalculatorBase({Key? key}) : super(key: key);
+  const CarbonCalculatorBase({super.key});
 }
 
 abstract class CarbonCalculatorBaseState<T extends CarbonCalculatorBase> extends State<T> {
@@ -21,6 +21,7 @@ abstract class CarbonCalculatorBaseState<T extends CarbonCalculatorBase> extends
   String buttonText = 'Choose Date';
   DateTime? pickedDate;
   late DateTime currentDate;
+  late String userId;
   
 
   void calculateCarbonEmissions();
