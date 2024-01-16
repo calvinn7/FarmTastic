@@ -1,7 +1,7 @@
 // ignore: file_names
 // ignore_for_file: unnecessary_null_comparison, depend_on_referenced_packages, use_build_context_synchronously
 
-import 'package:farmtastic/calculator/database.dart';
+import 'package:farmtastic/calculator/firebase.dart';
 import 'package:flutter/material.dart';
 
 import 'package:multiselect/multiselect.dart';
@@ -624,7 +624,7 @@ class _CarbonCalculatorPageState
         waterEmissions + fertilizerEmissions + transportationEmissions;
 
     calculateCarbonReductionTips();
-    storeEmissionsInDatabase(totalCarbonEmissions, pickedDate!);
+    storeEmissionsInFirebase(totalCarbonEmissions, pickedDate!);
     showResultToUser();
 
     setState(() {
@@ -646,9 +646,9 @@ class _CarbonCalculatorPageState
     }
   }
 
-  void storeEmissionsInDatabase(double emissions, DateTime selectedDate) async {
+  void storeEmissionsInFirebase(double emissions, DateTime selectedDate) async {
     final DateTime now = DateTime.now();
-    DatabaseService.instance.createDatabase(emissions, now, selectedDate);
+    FirebaseService.instance.createData(emissions, now, selectedDate);
   }
 
   @override
