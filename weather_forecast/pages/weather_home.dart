@@ -1,24 +1,26 @@
-import 'package:weather_forecast/consts.dart';
+import 'package:farmtastic/main/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
-import 'package:weather_forecast/pages/home.dart';
+import 'package:farmtastic/main/sidebar.dart';
 import 'search_page.dart';
 import 'alerts_page.dart';
-import 'home.dart';
+import 'package:geolocator/geolocator.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class WeatherHome extends StatefulWidget {
+  const WeatherHome({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<WeatherHome> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  final WeatherFactory _wf = WeatherFactory(OPENWEATHER_API_KEY);
+class _HomePageState extends State<WeatherHome> {
+  final WeatherFactory _wf = WeatherFactory("9b5122af87fdb70b263d5b104bf37770");
 
   Weather? _currentWeather;
   List<Weather>? _weatherForecast;
+
+  Position? _currentPosition;
 
   @override
   void initState() {
@@ -27,126 +29,104 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadWeatherData() async {
-    // Load current weather
-    Weather currentWeather = await _wf.currentWeatherByCityName("Kuala Lumpur");
-    setState(() {
-      _currentWeather = currentWeather;
-    });
+    await _getCurrentPosition();
 
-    // Load weather forecast
-    List<Weather> weatherForecast =
-    await _wf.fiveDayForecastByCityName("Kuala Lumpur");
-    setState(() {
-      _weatherForecast = weatherForecast;
+    if (_currentPosition != null) {
+      double latitude = _currentPosition!.latitude;
+      double longitude = _currentPosition!.longitude;
+
+      Weather currentWeather =
+          await _wf.currentWeatherByLocation(latitude, longitude);
+      List<Weather> weatherForecast =
+          await _wf.fiveDayForecastByLocation(latitude, longitude);
+
+      setState(() {
+        _currentWeather = currentWeather;
+        _weatherForecast = weatherForecast;
+      });
+    } else {
+      // Handle the case when the location is not available
+    }
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+    }).catchError((e) {
+      debugPrint(e);
     });
   }
 
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      return false;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE7F7D3),
+      backgroundColor: const Color(0xFFADBC8D),
       appBar: AppBar(
-        backgroundColor: Colors.lightGreen,
+        backgroundColor: const Color(0xFFF9FFDF),
+        centerTitle: true,
+        titleTextStyle: const TextStyle(
+          color: Color(0xFF567D01),
+
+          fontSize: 20.0, // Set the text size
+
+          fontWeight: FontWeight.w900, // Set the font weight
+        ),
         title: const Text('Weather Forecast'),
         actions: [
-      IconButton(
-      icon: const Icon(Icons.notifications),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => WeatherAlertsPage()),
-        );
-      },
-      ),
-
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => WeatherAlertsPage()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.search),
             onPressed: () {
               // Navigate to the search page when the search button is pressed
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SearchPage()),
+                MaterialPageRoute(builder: (context) => const SearchPage()),
               );
             },
           ),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color(0xFFE7F7D3),
-              ),
-              child: Center(
-                child: Text(
-                  'FarmTastic',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-
-                  ),
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                // Navigate back to the home page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              },
-            ),
-
-            ListTile(
-              title: Text('Weather'),
-              onTap: () {
-                // Navigate to Weather page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Farming Calendar'),
-              onTap: () {
-                // Navigate to Weather page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              },
-            ),
-
-            ListTile(
-              title: Text('Carbon Calculator'),
-              onTap: () {
-                // Navigate to Weather page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              },
-            ),
-
-            ListTile(
-              title: Text('Community'),
-              onTap: () {
-                // Navigate to Weather page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: Sidebar(),
       body: SingleChildScrollView(
         child: _buildUI(),
       ),
@@ -154,7 +134,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildUI() {
-
     if (_currentWeather == null || _weatherForecast == null) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -195,6 +174,7 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+
   Widget _locationHeader() {
     return Text(
       _currentWeather?.areaName ?? "",
@@ -248,28 +228,20 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-            height: MediaQuery
-                .sizeOf(context)
-                .height * 0.2,
+            height: MediaQuery.sizeOf(context).height * 0.2,
             decoration: BoxDecoration(
               image: DecorationImage(
                   image: NetworkImage(
-                      "http://openweathermap.org/img/wn/${_currentWeather
-                          ?.weatherIcon}@4x.png")
-              ),
-            )
-        ),
+                      "http://openweathermap.org/img/wn/${_currentWeather?.weatherIcon}@4x.png")),
+            )),
         Text(
           _currentWeather?.weatherDescription ?? "",
           style: const TextStyle(
             color: Colors.black,
             fontSize: 30,
           ),
-
         ),
-
       ],
-
     );
   }
 
@@ -286,20 +258,11 @@ class _HomePageState extends State<HomePage> {
 
   Widget _extraInfo() {
     return Container(
-      height: MediaQuery
-          .sizeOf(context)
-          .height * 0.05,
-      width: MediaQuery
-          .sizeOf(context)
-          .height * 0.40,
+      height: MediaQuery.sizeOf(context).height * 0.05,
+      width: MediaQuery.sizeOf(context).height * 0.40,
       decoration: BoxDecoration(
-          color: Colors.lightGreen, borderRadius: BorderRadius.circular(
-          20
-      )
-      ),
-      padding: const EdgeInsets.all(
-          8.0
-      ),
+          color: Colors.lightGreen, borderRadius: BorderRadius.circular(20)),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -329,16 +292,15 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget _hourlyForecastList() {
     // Filter hourly forecasts for today
     List<Weather> hourlyForecastsToday = _weatherForecast!
         .where((forecast) =>
-    forecast.date?.day == DateTime.now().day &&
-        forecast.date?.month == DateTime.now().month &&
-        forecast.date?.year == DateTime.now().year)
+            forecast.date?.day == DateTime.now().day &&
+            forecast.date?.month == DateTime.now().month &&
+            forecast.date?.year == DateTime.now().year)
         .toList();
-    // Print the length of hourlyForecastsToday to the console
-    print("Number of hourly forecasts for today: ${hourlyForecastsToday.length}");
 
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.2,
@@ -349,7 +311,7 @@ class _HomePageState extends State<HomePage> {
 
           return Container(
             width: MediaQuery.of(context).size.width * 0.3,
-            margin: EdgeInsets.symmetric(horizontal: 4.0),
+            margin: const EdgeInsets.symmetric(horizontal: 4.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -360,13 +322,13 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Image.network(
                   "http://openweathermap.org/img/wn/${hourlyForecast.weatherIcon}@2x.png",
                   height: 40,
                   width: 40,
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Text(
                   "${hourlyForecast.temperature?.celsius?.toStringAsFixed(0)}°C",
                   style: const TextStyle(
@@ -381,8 +343,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-
 
   Widget _dailyForecastList() {
     Map<String, List<Weather>> dailyForecasts = {};
@@ -400,7 +360,6 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Column(
-
       children: dailyForecasts.keys.map((date) {
         List<Weather> dailyForecast = dailyForecasts[date]!;
 
@@ -433,5 +392,4 @@ class _HomePageState extends State<HomePage> {
       }).toList(),
     );
   }
-
 }
