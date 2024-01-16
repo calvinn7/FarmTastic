@@ -4,13 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmtastic/authentication/features/profile_controller.dart';
 import 'package:get/get.dart';
 
-class DatabaseService {
-  static DatabaseService instance = DatabaseService._privateConstructor();
+class FirebaseService {
+  static FirebaseService instance = FirebaseService._privateConstructor();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  DatabaseService._privateConstructor();
+  FirebaseService._privateConstructor();
 
-  Future<void> createDatabase(
-      double emissions, DateTime currentDate, DateTime selectedDate) async {
+  Future<void> createData(
+    double emissions, DateTime currentDate, DateTime selectedDate) async {
     ProfileController controller = Get.put(ProfileController());
     await controller.getUserData();
     CollectionReference carbonEmissionsCollection = firestore
