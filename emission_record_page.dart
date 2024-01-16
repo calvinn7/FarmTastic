@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../authentication/features/profile_controller.dart';
-import 'database.dart';
+import 'firebase.dart';
 
 class EmissionRecordPage extends StatefulWidget {
   // ignore: use_super_parameters
@@ -50,7 +50,7 @@ class _EmissionRecordPageState extends State<EmissionRecordPage> {
     DateTime dateWithoutTime = DateTime(date.year, date.month, date.day);
 
     List<Map<String, dynamic>> data =
-        await DatabaseService.instance.getSelectedDateEmissionsF(dateWithoutTime);
+        await FirebaseService.instance.getSelectedDateEmissionsF(dateWithoutTime);
 
     data.sort((a, b) {
       DateTime dateA = DateTime.parse(a['currentDate']);
@@ -66,7 +66,7 @@ class _EmissionRecordPageState extends State<EmissionRecordPage> {
   }
 
   Future<void> deleteEmission(String docId) async {
-    await DatabaseService.instance.deleteSelectedDateEmissionF(docId);
+    await FirebaseService.instance.deleteSelectedDateEmissionF(docId);
     loadEmissionData(_selectedDate);
     loadAllDates();
     setState(() {});
