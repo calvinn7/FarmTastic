@@ -1,11 +1,14 @@
 // ignore_for_file: library_private_types_in_public_api, depend_on_referenced_packages
 
+import 'package:get/get.dart';
+
+import '../authentication/features/profile_controller.dart';
 import 'database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class EmissionHistoryPage extends StatefulWidget {
-  const EmissionHistoryPage({Key? key}) : super(key: key);
+  const EmissionHistoryPage({super.key});
 
   @override
   _EmissionHistoryPageState createState() => _EmissionHistoryPageState();
@@ -13,20 +16,29 @@ class EmissionHistoryPage extends StatefulWidget {
 
 class _EmissionHistoryPageState extends State<EmissionHistoryPage> {
   List<Map<String, dynamic>> emissionData = [];
+  late ProfileController _profileController;
 
   @override
   void initState() {
     super.initState();
+    _profileController = Get.put(ProfileController());
+    _loadUserDataAndEmissionData();
+  }
+
+  Future<void> _loadUserDataAndEmissionData() async {
+    await _profileController.getUserData();
     loadEmissionData();
   }
 
   Future<void> loadEmissionData() async {
-    emissionData = await DatabaseService.instance.getEmissions();
-    setState(() {});
+    if (mounted) {
+      emissionData = await DatabaseService.instance.getEmissionsF();
+      setState(() {});
+    }
   }
 
-  Future<void> deleteEmission(int id) async {
-    await DatabaseService.instance.deleteEmission(id);
+  Future<void> deleteEmission(String docId) async {
+    await DatabaseService.instance.deleteSelectedDateEmissionF(docId);
     loadEmissionData();
     setState(() {});
   }
@@ -60,6 +72,7 @@ class _EmissionHistoryPageState extends State<EmissionHistoryPage> {
           itemCount: emissionData.length,
           itemBuilder: (context, index) {
             final emission = emissionData[index];
+            final docId = emission['docId'] as String?;
             return ListTile(
               title: Text(
                 'Carbon Emissions: ${emission['emissions'].toStringAsFixed(2)} CO2',
@@ -75,7 +88,7 @@ class _EmissionHistoryPageState extends State<EmissionHistoryPage> {
               ),
               trailing: IconButton(
                 icon: const Icon(Icons.delete),
-                onPressed: () => deleteEmission(emission['id']),
+                onPressed: () => deleteEmission(docId!),
               ),
             );
           },
