@@ -1,19 +1,21 @@
 // ignore: file_names
 // ignore_for_file: unnecessary_null_comparison, depend_on_referenced_packages, use_build_context_synchronously
 
+import 'package:farmtastic/calculator/database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_test/database.dart';
+
 import 'package:multiselect/multiselect.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../main/sidebar.dart';
 import 'carbon_calc_base.dart';
-import 'emissions_his_page.dart';
+import 'date_picker.dart';
+import 'emission_his_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'date_picker.dart';
 import 'emission_record_page.dart';
 
 class CarbonCalculatorPage extends CarbonCalculatorBase {
-  const CarbonCalculatorPage({Key? key}) : super(key: key);
+  const CarbonCalculatorPage({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -22,26 +24,31 @@ class CarbonCalculatorPage extends CarbonCalculatorBase {
 
 class _CarbonCalculatorPageState
     extends CarbonCalculatorBaseState<CarbonCalculatorPage> {
-      
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Sidebar(),
+
       appBar: AppBar(
-        title: const Text(
-          'Carbon Footprint Calculator',
-          style: TextStyle(
-            color: Color.fromARGB(255, 61, 88, 2),
-            fontWeight: FontWeight.bold,
+        title:
+        const SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              Text(
+                'Carbon Footprint Calculator',
+                style: TextStyle(
+                  color: Color(0xFF567D01),
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+            ],
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.menu,
-            color: Color.fromARGB(255, 61, 88, 2),
-          ),
-          onPressed: () {},
-        ),
+
+        backgroundColor: const Color(0xFFF9FFDF),
+
         actions: [
           IconButton(
             icon: const Icon(
@@ -111,7 +118,7 @@ class _CarbonCalculatorPageState
               ),
 
               const SizedBox(height: 16.0),
-                    
+
               Card(
                 elevation: 15.0,
                 color: const Color.fromARGB(255, 233, 241, 195),
@@ -131,14 +138,17 @@ class _CarbonCalculatorPageState
                       const SizedBox(height: 8.0),
                       CupertinoButton(
                         onPressed: () async {
-                        DateTime? selectedDate = await DatePicker.showDatePickerModal(context, DateTime.now());
-                        if (selectedDate != null) {
-                          setState(() {
-                            pickedDate = selectedDate;
-                            buttonText = 'Selected Date: ${DateFormat.yMd().format(pickedDate!)}';
-                          });
-                        }
-                      },
+                          DateTime? selectedDate =
+                              await DatePicker.showDatePickerModal(
+                                  context, DateTime.now());
+                          if (selectedDate != null) {
+                            setState(() {
+                              pickedDate = selectedDate;
+                              buttonText =
+                                  'Selected Date: ${DateFormat.yMd().format(pickedDate!)}';
+                            });
+                          }
+                        },
                         color: const Color.fromARGB(255, 114, 165, 1),
                         child: Text(
                           buttonText,
@@ -222,7 +232,8 @@ class _CarbonCalculatorPageState
                             }
                           });
                         },
-                        hint: const Text('Select Transportation Modes (Optional)'),
+                        hint: const Text(
+                            'Select Transportation (Optional)'),
                       ),
                       const SizedBox(height: 8.0),
 
@@ -437,40 +448,42 @@ class _CarbonCalculatorPageState
   void calculateCarbonEmissions() {
     waterUsage = double.tryParse(waterUsageController.text) ?? 0.0;
 
-    // Check if the date  is empty 
+    // Check if the date  is empty
     if (pickedDate == null) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Invalid Date Input'),
-              content: const Text('Please select a date to proceed.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    waterUsageController.clear();
-                    for (String type in selectedFertilizerTypes) {
-                      fertilizerControllers[type]!.clear();
-                    }
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Invalid Date Input'),
+            content: const Text('Please select a date to proceed.'),
+            backgroundColor: const Color.fromARGB(255, 216, 237, 170),
 
-                    for (String mode in selectedTransportationModes) {
-                      transportationControllers[mode]!.clear();
-                    }
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  waterUsageController.clear();
+                  for (String type in selectedFertilizerTypes) {
+                    fertilizerControllers[type]!.clear();
+                  }
 
-                    setState(() {
-                      showGraph = false;
-                      totalCarbonEmissions = 0.0;
-                    });
+                  for (String mode in selectedTransportationModes) {
+                    transportationControllers[mode]!.clear();
+                  }
+
+                  setState(() {
+                    showGraph = false;
+                    totalCarbonEmissions = 0.0;
+                  });
                 },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-        return;
-      }
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
     // Check if any water usage text field is empty or not a numeric value
     if (waterUsage == 0.0) {
       showDialog(
@@ -480,6 +493,7 @@ class _CarbonCalculatorPageState
             title: const Text('Invalid Water Usage Input'),
             content: const Text(
                 'Please enter a valid non-zero numeric value for water usage .'),
+            backgroundColor: const Color.fromARGB(255, 216, 237, 170),
             actions: [
               TextButton(
                 onPressed: () {
@@ -517,9 +531,10 @@ class _CarbonCalculatorPageState
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Invalid  Fertilizer Type Input'),
+              title: const Text('Invalid Fertilizer Type Input'),
               content: Text(
                   'Please enter a valid non-zero numeric value for $type .'),
+              backgroundColor: const Color.fromARGB(255, 216, 237, 170),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -561,6 +576,7 @@ class _CarbonCalculatorPageState
               title: const Text('Invalid Transportation Type Input'),
               content: Text(
                   'Please enter a valid non-zero numeric value for $mode .'),
+              backgroundColor: const Color.fromARGB(255, 216, 237, 170),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -608,11 +624,8 @@ class _CarbonCalculatorPageState
         waterEmissions + fertilizerEmissions + transportationEmissions;
 
     calculateCarbonReductionTips();
-    storeEmissionsInDatabase(totalCarbonEmissions,pickedDate!);
-    storeEmissionsDateInDatabase(totalCarbonEmissions, pickedDate!);
+    storeEmissionsInDatabase(totalCarbonEmissions, pickedDate!);
     showResultToUser();
-    
-
 
     setState(() {
       showGraph = true;
@@ -632,16 +645,11 @@ class _CarbonCalculatorPageState
       );
     }
   }
- 
+
   void storeEmissionsInDatabase(double emissions, DateTime selectedDate) async {
-  final DateTime now = DateTime.now();
-  DatabaseService.instance.insertEmissions(emissions, now,selectedDate);
-}
-
-void storeEmissionsDateInDatabase(double emissions, DateTime selectedDate) async {
-  DatabaseService.instance.insertSelectedDateEmissions(emissions, selectedDate);
-}
-
+    final DateTime now = DateTime.now();
+    DatabaseService.instance.createDatabase(emissions, now, selectedDate);
+  }
 
   @override
   void calculateCarbonReductionTips() {
