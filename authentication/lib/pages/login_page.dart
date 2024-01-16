@@ -1,13 +1,13 @@
-import 'package:farmtastic/components/my_button.dart';
-import 'package:farmtastic/components/my_textfield.dart';
-import 'package:farmtastic/components/square_tile.dart';
-import 'package:farmtastic/services/auth_service.dart';
+import 'package:farmtastic/authentication/components/my_button.dart';
+import 'package:farmtastic/authentication/components/my_textfield.dart';
+import 'package:farmtastic/authentication/components/square_tile.dart';
+import 'package:farmtastic/authentication/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../main/home.dart';
 import 'forgot_pw_page.dart';
-import 'profile/profile_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.of(context).pop();
           Navigator.pushReplacement(
             currentContext,
-            MaterialPageRoute(builder: (context) => const ProfilePage()),
+            MaterialPageRoute(builder: (context) => Home()),
           );
         }
       } else {
@@ -106,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/images/background.png'),
+                  image: AssetImage('assets/images/background.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -126,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
 
                       // logo
                       const Image(
-                        image: AssetImage('lib/images/logo.png'),
+                        image: AssetImage('assets/images/logo.png'),
                         width: 125.0,
                         height: 125,
                       ),
@@ -273,8 +273,10 @@ class _LoginPageState extends State<LoginPage> {
                           // google button
                           SquareTile(
                               labelText: 'Sign in with Google',
-                              onTap: () => AuthService().signInWithGoogle(),
-                              imagePath: 'lib/images/google.png'),
+                              onTap: () async {
+                                await AuthService().signInWithGoogle(context);
+                              },
+                              imagePath: 'assets/images/google.png'),
 
                           // const SizedBox(width: 25),
 
