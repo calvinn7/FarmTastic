@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
-import 'package:weather_forecast/consts.dart';
+import 'package:farmtastic/main/consts.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -29,49 +29,56 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFE7F7D3),
+      backgroundColor: const Color(0xFFADBC8D),
       appBar: AppBar(
-        title: Text('Weather Forecast'),
-        backgroundColor: Colors.lightGreen,
-      ),
+        title: const Text('Weather Forecast'),
+        backgroundColor: const Color(0xFFF9FFDF),
+        centerTitle: true,
+        titleTextStyle: const TextStyle(
+          color: Color(0xFF567D01),
+
+          fontSize: 20.0, // Set the text size
+
+          fontWeight: FontWeight.w900, // Set the font weight
+        ),      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Select Date:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             InkWell(
               onTap: () {
                 _selectDate(context);
               },
               child: Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.calendar_today),
-                    SizedBox(width: 10),
+                    const Icon(Icons.calendar_today),
+                    const SizedBox(width: 10),
                     Text(
                       DateFormat('dd MMMM yyyy').format(_selectedDate),
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Select Forecast Duration:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             DropdownButton<int>(
               value: _forecastDuration,
               onChanged: (value) {
@@ -80,31 +87,30 @@ class _SearchPageState extends State<SearchPage> {
                 });
               },
               items: [
-                DropdownMenuItem<int>(
+                const DropdownMenuItem<int>(
                   value: 1,
                   child: Text('1 Day'),
                 ),
-                DropdownMenuItem<int>(
+                const DropdownMenuItem<int>(
                   value: 7,
                   child: Text('1 Week'),
                 ),
-                DropdownMenuItem<int>(
+                const DropdownMenuItem<int>(
                   value: 14,
                   child: Text('2 Weeks'),
                 ),
-                DropdownMenuItem<int>(
+                const DropdownMenuItem<int>(
                   value: 28,
                   child: Text('4 Weeks'),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 _getWeatherForDateRange(_selectedDate, _forecastDuration);
               },
-              child: Text('Get Weather Forecast'),
-
+              child: const Text('Get Weather Forecast'),
             ),
           ],
         ),
@@ -117,7 +123,7 @@ class _SearchPageState extends State<SearchPage> {
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
     );
 
     if (pickedDate != null && pickedDate != _selectedDate) {
@@ -127,19 +133,20 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  void _getWeatherForDateRange(DateTime selectedDate,
-      int forecastDuration) async {
+  void _getWeatherForDateRange(
+      DateTime selectedDate, int forecastDuration) async {
     try {
       // Load weather forecast for the next 5 days (or any reasonable duration)
-      List<Weather> weatherForecast = await _wf.fiveDayForecastByCityName(
-          "Kuala Lumpur");
+      List<Weather> weatherForecast =
+          await _wf.fiveDayForecastByCityName("Kuala Lumpur");
 
       // Filter the forecast data based on the selected date and duration
       DateTime endDate = selectedDate.add(Duration(days: forecastDuration - 1));
       List<Weather> filteredForecast = weatherForecast
           .where((forecast) =>
-      forecast.date!.isAfter(selectedDate.subtract(Duration(days: 1))) &&
-          forecast.date!.isBefore(endDate.add(Duration(days: 1))))
+              forecast.date!
+                  .isAfter(selectedDate.subtract(const Duration(days: 1))) &&
+              forecast.date!.isBefore(endDate.add(const Duration(days: 1))))
           .toList();
 
       // Update the UI with the filtered forecast information
@@ -152,7 +159,7 @@ class _SearchPageState extends State<SearchPage> {
     } catch (e) {
       // Display an error message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Error fetching weather data. Please try again later.'),
           backgroundColor: Colors.red,
         ),
