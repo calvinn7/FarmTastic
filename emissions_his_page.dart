@@ -3,7 +3,7 @@
 import 'package:get/get.dart';
 
 import '../authentication/features/profile_controller.dart';
-import 'database.dart';
+import 'firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -32,13 +32,13 @@ class _EmissionHistoryPageState extends State<EmissionHistoryPage> {
 
   Future<void> loadEmissionData() async {
     if (mounted) {
-      emissionData = await DatabaseService.instance.getEmissionsF();
+      emissionData = await FirebaseService.instance.getEmissionsF();
       setState(() {});
     }
   }
 
   Future<void> deleteEmission(String docId) async {
-    await DatabaseService.instance.deleteSelectedDateEmissionF(docId);
+    await FirebaseService.instance.deleteSelectedDateEmissionF(docId);
     loadEmissionData();
     setState(() {});
   }
