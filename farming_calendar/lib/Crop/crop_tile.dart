@@ -12,11 +12,11 @@ class CropTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(bottom: 15),
+      margin: const EdgeInsets.only(bottom: 15),
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         //  width: SizeConfig.screenWidth * 0.78,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
@@ -26,7 +26,7 @@ class CropTile extends StatelessWidget {
               color: Colors.grey.withOpacity(0.5), // Set the shadow color
               spreadRadius: 3, // Set the spread radius of the shadow
               blurRadius: 5, // Set the blur radius of the shadow
-              offset: Offset(0, 3), // Set the offset of the shadow
+              offset: const Offset(0, 3), // Set the offset of the shadow
             ),
           ],
         ),
@@ -39,29 +39,29 @@ class CropTile extends StatelessWidget {
                 Text(
                   crop?.plant ?? "",
                   style: GoogleFonts.lato(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 12,
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.calendar_today_outlined,
                       color: Colors.black38,
                       size: 18,
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Text(
                       "${crop!.startDate} - ${crop!.endDate}",
                       style: GoogleFonts.lato(
                         textStyle:
-                            TextStyle(fontSize: 13, color: Colors.black38),
+                            const TextStyle(fontSize: 13, color: Colors.black38),
                       ),
                     ),
                   ],

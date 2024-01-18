@@ -1,4 +1,4 @@
-import 'package:farmtastic/Crop/crop_controller.dart';
+import 'package:farmtastic/calendar/Crop/crop_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
@@ -18,6 +18,7 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
   @override
   void initState() {
     super.initState();
+    _cropController.getCrops();
   }
 
   @override
@@ -26,7 +27,7 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
       appBar: _appBar(),
       body: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           _showCrops(),
@@ -51,28 +52,40 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
   _showCrops() {
     return Expanded(
       child: Obx(() {
-        return ListView.builder(
-            itemCount: _cropController.cropList.length,
-            itemBuilder: (_, index) {
-              Crop crop = _cropController.cropList[index];
-              print(crop.toJson());
+        return FutureBuilder<List<dynamic>>(
+            future: _cropController.getCrops(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                List<dynamic> crops = snapshot.data ?? [];
+            return ListView.builder(
+                itemCount: crops.length,
+                itemBuilder: (_, index) {
+                  Crop crop = crops[index];
+                  // print(crop.toJson());
 
-              return AnimationConfiguration.staggeredList(
-                  position: index,
-                  child: SlideAnimation(
-                    child: FadeInAnimation(
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                              onTap: () {
-                                _showBottomSheet(context, crop);
-                              },
-                              child: CropTile(crop))
-                        ],
-                      ),
-                    ),
-                  ));
-            });
+                  return AnimationConfiguration.staggeredList(
+                      position: index,
+                      child: SlideAnimation(
+                        child: FadeInAnimation(
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    _showBottomSheet(context, crop);
+                                  },
+                                  child: CropTile(crop))
+                            ],
+                          ),
+                        ),
+                      ));
+                });
+          }
+        },
+        );
       }),
     );
   }
@@ -82,7 +95,7 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
         context: context,
         builder: (BuildContext context) {
           return Container(
-            padding: EdgeInsets.only(top: 2),
+            padding: const EdgeInsets.only(top: 2),
             height: MediaQuery.of(context).size.height * 0.22,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -97,17 +110,18 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
                       borderRadius: BorderRadius.circular(10),
                       color: Colors.grey[400],
                     )),
-                Spacer(),
+                const Spacer(),
                 _bottomSheetButton(
                   label: "Delete Schedule",
                   onTap: () {
-                    _cropController.delete(crop);
+                    _cropController.deleteCrop(crop.docId!);
+                    setState(() {});
                     Navigator.of(context).pop();
                   },
                   clr: Colors.red[300]!,
                   context: context,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 _bottomSheetButton(
@@ -119,7 +133,7 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
                   isClose: true,
                   context: context,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
               ],
@@ -138,7 +152,7 @@ class _ViewMyScheduleState extends State<ViewMySchedule> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         height: 55,
         decoration: BoxDecoration(
           border: Border.all(

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get/get.dart';
@@ -20,7 +19,7 @@ class NotifyHelper {
     _configureLocalTimeZone(); // final IOSInitializationSettings initializationSettingsIOS =
 
     final AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings("appicon");
+        const AndroidInitializationSettings("appicon");
 
     final InitializationSettings initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
@@ -33,7 +32,7 @@ class NotifyHelper {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(
-          AndroidNotificationChannel(
+          const AndroidNotificationChannel(
             'your channel id',
             'your channel name',
             importance: Importance.max,
@@ -44,11 +43,11 @@ class NotifyHelper {
   Future<void> displayNotification(
       {required String title, required String body}) async {
     print("doing test");
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
         'your channel id', 'your channel name',
         importance: Importance.max, priority: Priority.high);
     var platformChannelSpecifics =
-        new NotificationDetails(android: androidPlatformChannelSpecifics);
+        NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
       0,
       title,
@@ -103,6 +102,6 @@ class NotifyHelper {
 
   Future onDidReceiveLocalNotification(
       int id, String? title, String? body, String? payload) async {
-    Get.dialog(Text("Welcome to flutter"));
+    Get.dialog(const Text("Welcome to flutter"));
   }
 }

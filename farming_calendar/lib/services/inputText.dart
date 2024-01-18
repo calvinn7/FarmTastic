@@ -1,4 +1,4 @@
-import 'package:farmtastic/services/theme.dart';
+import 'package:farmtastic/calendar/services/theme.dart';
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
@@ -48,13 +48,13 @@ class MyTextField extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: hint,
                       hintStyle: subTitleStyle,
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.lightGreen,
                           width: 2,
                         ),
                       ),
-                      enabledBorder: OutlineInputBorder(
+                      enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.black,
                           width: 0,

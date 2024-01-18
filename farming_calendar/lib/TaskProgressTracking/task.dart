@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Task {
   int? id;
+  String? docId;
   String? title;
   String? note;
-  int? isCompleted;
+  bool? isCompleted;
   String? date;
   String? startTime;
   String? endTime;
@@ -10,6 +13,7 @@ class Task {
 
   Task({
     this.id,
+    this.docId,
     this.title,
     this.note,
     this.isCompleted,
@@ -18,17 +22,6 @@ class Task {
     this.endTime,
     this.remind,
   });
-
-  Task.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'].toString();
-    note = json['note'].toString();
-    isCompleted = json['isCompleted'];
-    date = json['date'];
-    startTime = json['startTime'];
-    endTime = json['endTime'];
-    remind = json['remind'];
-  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -42,5 +35,30 @@ class Task {
     data['remind'] = this.remind;
 
     return data;
+  }
+
+  // Task.fromJson(Map<String, dynamic> json) {
+  //   id = json['id'];
+  //   title = json['title'].toString();
+  //   note = json['note'].toString();
+  //   isCompleted = json['isCompleted'];
+  //   date = json['date'];
+  //   startTime = json['startTime'];
+  //   endTime = json['endTime'];
+  //   remind = json['remind'];
+  // }
+  factory Task.fromJson(DocumentSnapshot<Map<String, dynamic>> document) {
+    final json = document.data();
+    return Task(
+    id : json?['id'],
+    docId: document.id,
+    title : json?['title'].toString(),
+    note : json?['note'].toString(),
+    isCompleted : json?['isCompleted'],
+    date : json?['date'],
+    startTime : json?['startTime'],
+    endTime : json?['endTime'],
+    remind : json?['remind'],
+    );
   }
 }

@@ -1,13 +1,13 @@
-import 'package:farmtastic/Crop/crop_controller.dart';
-import 'package:farmtastic/Calendar/calendar_model.dart';
+import 'package:farmtastic/calendar/Calendar/calendar_model.dart';
+import 'package:farmtastic/calendar/Calendar/clean_calendar_controller.dart';
+import 'package:farmtastic/calendar/Calendar/scrollable_calendar.dart';
+import 'package:farmtastic/calendar/Crop/crop_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:farmtastic/Calendar/scrollable_calendar.dart';
+import 'package:provider/provider.dart';
 import 'package:scrollable_clean_calendar/utils/enums.dart';
 
-import '../Calendar/clean_calendar_controller.dart';
 import '../services/theme.dart';
 import 'crop.dart';
 
@@ -47,7 +47,7 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("CROP SCHEDULING"),
+        title: const Text("Crop Scheduling"),
         backgroundColor: const Color(0xFFF9FFDF),
         centerTitle: true,
         titleTextStyle: const TextStyle(
@@ -66,7 +66,7 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
                   color: Colors.grey.withOpacity(0.5), // Set the shadow color
                   spreadRadius: 5, // Set the spread radius of the shadow
                   blurRadius: 10, // Set the blur radius of the shadow
-                  offset: Offset(0, 3), // Set the offset of the shadow
+                  offset: const Offset(0, 3), // Set the offset of the shadow
                 ),
               ],
               color: const Color(0xFFDDECCB),
@@ -99,9 +99,9 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                           filled: true,
-                          fillColor: Color(0xFF8A9D5F),
+                          fillColor: const Color(0xFF8A9D5F),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(
+                          contentPadding: const EdgeInsets.only(
                               left: 20.0, top: 2.0, bottom: 5.0),
                         ),
                         onChanged: (value) {
@@ -113,7 +113,7 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 7),
+                const SizedBox(height: 7),
                 Row(
                   children: [
                     Text(
@@ -147,7 +147,7 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Text(
@@ -161,7 +161,7 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Expanded(
@@ -174,7 +174,7 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
                     color: Colors.grey.withOpacity(0.5), // Set the shadow color
                     spreadRadius: 5, // Set the spread radius of the shadow
                     blurRadius: 7, // Set the blur radius of the shadow
-                    offset: Offset(0, 3), // Set the offset of the shadow
+                    offset: const Offset(0, 3), // Set the offset of the shadow
                   ),
                 ],
                 color: const Color(0xFFDDECCB),
@@ -199,7 +199,7 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
                         5.0, // Add some space between text fields and calendar
                   ),
                   Container(
-                    child: Column(
+                    child: const Column(
                       children: [],
                     ),
                   ),
@@ -232,7 +232,7 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
       // Create a button to trigger the crop schedule
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(top: 78.0, right: 15.0),
+        padding: const EdgeInsets.only(top: 78.0, right: 15.0),
         child: Consumer<CalendarModel>(
           // Press this button to pass selected date range to main page
           builder: ((context, calendar, child) {
@@ -276,7 +276,14 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
         calendarController.rangeMaxDate != null) {
       _start = calendarController.rangeMinDate;
       _end = calendarController.rangeMaxDate;
-      _addCropToDB();
+      final crop = Crop(
+        plant: cropName,
+        duration: duration,
+        color: _selectedColor,
+        startDate: _start != null ? DateFormat.yMd().format(_start!) : '',
+        endDate: _end != null ? DateFormat.yMd().format(_end!) : '',
+      );
+      _cropController.addCrop(crop);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Crop is scheduled"),
@@ -286,17 +293,17 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
     }
   }
 
-  _addCropToDB() async {
-    int value = await _cropController.addCrop(
-        crop: Crop(
-      plant: cropName,
-      duration: duration,
-      color: _selectedColor,
-      startDate: _start != null ? DateFormat.yMd().format(_start!) : '',
-      endDate: _end != null ? DateFormat.yMd().format(_end!) : '',
-    ));
-    print("Crop id is " + "$value");
-  }
+  // _addCropToDB() async {
+  //   int value = await _cropController.addCrop(
+  //       crop: Crop(
+  //     plant: cropName,
+  //     duration: duration,
+  //     color: _selectedColor,
+  //     startDate: _start != null ? DateFormat.yMd().format(_start!) : '',
+  //     endDate: _end != null ? DateFormat.yMd().format(_end!) : '',
+  //   ));
+  //   print("Crop id is " + "$value");
+  // }
 
   _colorPlatte() {
     return Wrap(
@@ -319,7 +326,7 @@ class _CropSchedulingPageState extends State<CropSchedulingPage> {
                           ? c3
                           : c4,
               child: _selectedColor == index
-                  ? Icon(
+                  ? const Icon(
                       Icons.done,
                       color: Colors.black,
                       size: 16,

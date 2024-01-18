@@ -1,4 +1,4 @@
-import 'package:farmtastic/Calendar/weekdays_widget.dart';
+import 'package:farmtastic/calendar/Calendar/weekdays_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:scrollable_clean_calendar/models/day_values_model.dart';
@@ -8,7 +8,6 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import 'clean_calendar_controller.dart';
 import 'days_widget.dart';
-
 
 class ScrollableCleanCalendar extends StatefulWidget {
   /// The language locale
@@ -132,7 +131,7 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Color(0xFFDBEACA),
+        color: const Color(0xFFDBEACA),
       ),
       child: _buildCalendar(),
     );
@@ -186,9 +185,9 @@ class _ScrollableCleanCalendarState extends State<ScrollableCleanCalendar> {
           width: 130.0,
           height: 30.0,
           decoration: BoxDecoration(
-            color: Color(0xFF8A9D5F),
+            color: const Color(0xFF8A9D5F),
             border: Border.all(
-              color: Color(0xFF8A9D5F),
+              color: const Color(0xFF8A9D5F),
             ),
             borderRadius: BorderRadius.circular(15.0),
           ),

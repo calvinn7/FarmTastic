@@ -24,7 +24,7 @@ class DaysWidget extends StatelessWidget {
   final TextStyle? textStyle;
 
   const DaysWidget({
-    Key? key,
+    super.key,
     required this.month,
     required this.cleanCalendarController,
     required this.calendarCrossAxisSpacing,
@@ -38,7 +38,7 @@ class DaysWidget extends StatelessWidget {
     required this.dayDisableColor,
     required this.radius,
     required this.textStyle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -63,10 +63,10 @@ class DaysWidget extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFF8A9D5F),
+        color: const Color(0xFF8A9D5F),
         borderRadius: BorderRadius.circular(15.0),
       ),
-      padding: EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(5.0),
       child: GridView.count(
         crossAxisCount: DateTime.daysPerWeek,
         physics: const NeverScrollableScrollPhysics(),
@@ -158,7 +158,7 @@ class DaysWidget extends StatelessWidget {
           (values.selectedMaxDate != null &&
               values.day.isSameDay(values.selectedMaxDate!))) {
         // Light green color for selected min range date and max range date
-        bgColor = Color(0xFFA4D4A7);
+        bgColor = const Color(0xFFA4D4A7);
         txtStyle =
             (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
           color: Colors.white,
@@ -169,7 +169,7 @@ class DaysWidget extends StatelessWidget {
           values.day.isSameDayOrAfter(cleanCalendarController.rangeMinDate!) &&
           values.day.isSameDayOrBefore(cleanCalendarController.rangeMaxDate!)) {
         // Green color for dates in between
-        bgColor = Color(0xFFA9B490);
+        bgColor = const Color(0xFFA9B490);
         txtStyle =
             (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
           color: Colors.white,
@@ -179,7 +179,7 @@ class DaysWidget extends StatelessWidget {
       }
     } else if (values.day.isSameDay(DateTime.now())) {
       // Highlight the current date with a bit round border
-      bgColor = Color(0xFF7DC9AB); // Change this to the desired color
+      bgColor = const Color(0xFF7DC9AB); // Change this to the desired color
       txtStyle = (textStyle ?? Theme.of(context).textTheme.bodyLarge)!.copyWith(
         color: Colors.white,
       );

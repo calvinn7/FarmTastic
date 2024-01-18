@@ -1,10 +1,10 @@
-import 'package:farmtastic/TaskProgressTracking/task.dart';
-import 'package:farmtastic/TaskProgressTracking/task_controller.dart';
-import 'package:farmtastic/services/inputText.dart';
+import 'package:farmtastic/calendar/TaskProgressTracking/task.dart';
+import 'package:farmtastic/calendar/TaskProgressTracking/task_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../services/inputText.dart';
 import '../services/theme.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -36,7 +36,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               MyTextField(
@@ -53,7 +53,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   title: "Date",
                   hint: DateFormat.yMd().format(_selectedDate),
                   widget: IconButton(
-                    icon: Icon(Icons.calendar_today_outlined),
+                    icon: const Icon(Icons.calendar_today_outlined),
                     onPressed: () {
                       _getDateFromUser();
                     },
@@ -68,14 +68,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         onPressed: () {
                           _getTimeFromUser(isStartTime: true);
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.access_time_rounded,
                           color: Colors.grey,
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 12,
                   ),
                   Expanded(
@@ -86,7 +86,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         onPressed: () {
                           _getTimeFromUser(isStartTime: false);
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.access_time_rounded,
                           color: Colors.grey,
                         ),
@@ -99,7 +99,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 title: "Remind",
                 hint: "$_selectedRemind minutes early",
                 widget: DropdownButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.keyboard_arrow_down,
                     color: Colors.grey,
                   ),
@@ -135,7 +135,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           // Set the spread radius of the shadow
                           blurRadius: 5,
                           // Set the blur radius of the shadow
-                          offset: Offset(0, 3), // Set the offset of the shadow
+                          offset: const Offset(0, 3), // Set the offset of the shadow
                         ),
                       ],
                     ),
@@ -147,7 +147,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         onPressed: () {
                           _validateDate();
                         },
-                        icon: Icon(Icons.done),
+                        icon: const Icon(Icons.done),
                       ),
                     ),
                   ),
@@ -169,24 +169,43 @@ class _AddTaskPageState extends State<AddTaskPage> {
       );
     } else if (_titleController.text.isNotEmpty &&
         _noteController.text.isNotEmpty) {
-      _addTaskToDb();
+      DateTime dateWithoutTime = DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day);
+
+      final task = Task(
+          note: _noteController.text,
+          title: _titleController.text,
+          date: dateWithoutTime.toIso8601String(),
+          startTime: _startTime,
+          endTime: _endTime,
+          remind: _selectedRemind,
+          isCompleted: false);
+      _taskController.addTask(task);
       Navigator.of(context).pop();
     }
   }
 
-  _addTaskToDb() async {
-    int value = await _taskController.addTask(
-        task: Task(
-      note: _noteController.text,
-      title: _titleController.text,
-      date: DateFormat.yMd().format(_selectedDate),
-      startTime: _startTime,
-      endTime: _endTime,
-      remind: _selectedRemind,
-      isCompleted: 0,
-    ));
-    print("My id is " + "$value");
-  }
+  // Future<void> _addTaskToFirestore() async {
+  //   try {
+  //     CollectionReference tasks = FirebaseFirestore.instance
+  //         .collection('Users')
+  //         .doc(ProfileController.instance.userData.value!.id)
+  //         .collection('tasks');
+  //
+  //     await tasks.add({
+  //       'note': _noteController.text,
+  //       'title': _titleController.text,
+  //       'date': DateFormat.yMd().format(_selectedDate),
+  //       'startTime': _startTime,
+  //       'endTime': _endTime,
+  //       'remind': _selectedRemind,
+  //       'isCompleted': false,
+  //     });
+  //
+  //     print("Task added to Firestore successfully");
+  //   } catch (e) {
+  //     print("Error adding task to Firestore: $e");
+  //   }
+  // }
 
   _getDateFromUser() async {
     DateTime? _pickerDate = await showDatePicker(
