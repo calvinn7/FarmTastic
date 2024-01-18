@@ -1,7 +1,7 @@
+import 'package:farmtastic/main/consts.dart';
 import 'package:flutter/material.dart';
-import 'package:weather/weather.dart';
-import 'package:weather_forecast/consts.dart';
 import 'package:intl/intl.dart';
+import 'package:weather/weather.dart';
 
 class WeatherAlertsPage extends StatefulWidget {
   @override
@@ -16,10 +16,18 @@ class _WeatherAlertsPageState extends State<WeatherAlertsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE7F7D3),
+      backgroundColor: const Color(0xFFADBC8D),
       appBar: AppBar(
-        backgroundColor: Colors.lightGreen,
         title: const Text('Weather Alerts'),
+        backgroundColor: const Color(0xFFF9FFDF),
+        centerTitle: true,
+        titleTextStyle: const TextStyle(
+          color: Color(0xFF567D01),
+
+          fontSize: 20.0, // Set the text size
+
+          fontWeight: FontWeight.w900, // Set the font weight
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,7 +60,7 @@ class _WeatherAlertsPageState extends State<WeatherAlertsPage> {
         children: [
           Text(
             '$alertType Alerts',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
           Expanded(
@@ -60,7 +68,11 @@ class _WeatherAlertsPageState extends State<WeatherAlertsPage> {
               future: fetchWeatherAlerts(alertType),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return const SizedBox(
+                    height: 200.0,
+                    width: 200.0,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.data == null) {
@@ -90,11 +102,12 @@ class _WeatherAlertsPageState extends State<WeatherAlertsPage> {
     );
   }
 
-  Future<List<Map<String, dynamic>>?> fetchWeatherAlerts(String alertType) async {
+  Future<List<Map<String, dynamic>>?> fetchWeatherAlerts(
+      String alertType) async {
     try {
       // Fetch weather forecast for the next 5 days
       List<Weather> weatherForecast =
-      await _wf.fiveDayForecastByCityName("Kuala Lumpur");
+          await _wf.fiveDayForecastByCityName("Kuala Lumpur");
 
       // Check if there is rain or thunderstorm in the next 5 days
       List<Map<String, dynamic>> rainAlerts = [];
@@ -107,7 +120,9 @@ class _WeatherAlertsPageState extends State<WeatherAlertsPage> {
               'alertText': 'Rain expected in Kuala Lumpur',
               'dateTime': weather.date,
             });
-          } else if (weather.weatherDescription!.toLowerCase().contains("thunderstorm")) {
+          } else if (weather.weatherDescription!
+              .toLowerCase()
+              .contains("thunderstorm")) {
             thunderstormAlerts.add({
               'alertText': 'Thunderstorm expected in Kuala Lumpur',
               'dateTime': weather.date,
@@ -133,5 +148,4 @@ class _WeatherAlertsPageState extends State<WeatherAlertsPage> {
       return null;
     }
   }
-
 }

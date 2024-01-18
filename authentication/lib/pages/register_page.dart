@@ -1,15 +1,15 @@
-import 'package:farmtastic/components/my_button.dart';
-import 'package:farmtastic/components/my_textfield.dart';
-import 'package:farmtastic/components/square_tile.dart';
-import 'package:farmtastic/repository/authentication_repository/user_repository.dart';
+import 'package:farmtastic/authentication/components/my_button.dart';
+import 'package:farmtastic/authentication/components/my_textfield.dart';
+import 'package:farmtastic/authentication/components/square_tile.dart';
+import 'package:farmtastic/authentication/repository/authentication_repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../features/authentication/user_model.dart';
+import '../../main/home.dart';
+import '../features/user_model.dart';
 import '../services/auth_service.dart';
-import 'profile/profile_page.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -68,6 +68,7 @@ class _RegisterPageState extends State<RegisterPage> {
           email: emailController.text.trim(),
           fullName: "User",
           phoneNo: null,
+          profilePicture: null,
         );
         createUser(user);
 
@@ -77,7 +78,7 @@ class _RegisterPageState extends State<RegisterPage> {
         // Navigate to the profile page and replace the current screen
         Navigator.pushReplacement(
           currentContext,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => Home()),
         );
       } else {
         // Password not confirmed, show error message
@@ -180,7 +181,7 @@ class _RegisterPageState extends State<RegisterPage> {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/images/background.png'),
+                  image: AssetImage('assets/images/background.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -199,7 +200,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                       // logo
                       const Image(
-                        image: AssetImage('lib/images/logo.png'),
+                        image: AssetImage('assets/images/logo.png'),
                         width: 125.0,
                         height: 125,
                       ),
@@ -340,8 +341,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           // google button
                           SquareTile(
                               labelText: 'Sign in with Google',
-                              onTap: () => AuthService().signInWithGoogle(),
-                              imagePath: 'lib/images/google.png'),
+                              onTap: () async {
+                                await AuthService().signInWithGoogle(context);
+                              },
+                              imagePath: 'assets/images/google.png'),
 
                           // const SizedBox(width: 25),
                           // apple button

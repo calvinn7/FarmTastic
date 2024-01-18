@@ -1,34 +1,35 @@
-import 'package:farmtastic/pages/login_page.dart';
-import 'package:farmtastic/pages/register_page.dart';
+import 'package:farmtastic/authentication/pages/login_page.dart';
+import 'package:farmtastic/authentication/pages/register_page.dart';
 import 'package:flutter/material.dart';
 
-class LoginOrRegisterPage extends StatefulWidget{
+class LoginOrRegisterPage extends StatefulWidget {
   const LoginOrRegisterPage({super.key});
 
   @override
   State<LoginOrRegisterPage> createState() => _LoginOrRegisterPageState();
-
 }
 
-class _LoginOrRegisterPageState extends State<LoginOrRegisterPage>{
+class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
   //initially show login page
   bool showLoginPage = true;
 
   //toggle between login and register page
-  void togglePages(){
+  void togglePages() {
     setState(() {
       showLoginPage = !showLoginPage;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    if(showLoginPage){
-      return LoginPage(onTap: togglePages,);
-    }else{
+    if (showLoginPage) {
+      return LoginPage(
+        onTap: togglePages,
+      );
+    } else {
       return RegisterPage(
         onTap: togglePages,
       );
     }
   }
-
 }

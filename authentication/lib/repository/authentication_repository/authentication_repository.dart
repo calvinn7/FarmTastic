@@ -1,11 +1,8 @@
-import 'package:farmtastic/pages/login_or_register_page.dart';
-import 'package:farmtastic/pages/login_page.dart';
-import 'package:farmtastic/pages/register_page.dart';
-import 'package:farmtastic/repository/authentication_repository/user_repository.dart';
+import 'package:farmtastic/authentication/pages/login_or_register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-import '../../pages/profile/profile_page.dart';
+import '../../pages/profile_page.dart';
 
 class AuthenticationRepository extends GetxController {
   static AuthenticationRepository get instance => Get.find();
