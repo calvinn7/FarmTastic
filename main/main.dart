@@ -1,3 +1,4 @@
+import 'package:farmtastic/authentication/pages/auth_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         create: (context) => CalendarModel(),
         child: const MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: LoginOrRegisterPage(),
+          home: AuthPage(),
         ));
   }
 }
