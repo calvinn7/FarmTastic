@@ -1,13 +1,13 @@
-import 'package:farmtastic/components/my_button.dart';
-import 'package:farmtastic/components/my_textfield.dart';
-import 'package:farmtastic/components/square_tile.dart';
-import 'package:farmtastic/services/auth_service.dart';
+import 'package:farmtastic/authentication/components/my_button.dart';
+import 'package:farmtastic/authentication/components/my_textfield.dart';
+import 'package:farmtastic/authentication/components/square_tile.dart';
+import 'package:farmtastic/authentication/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../main/home.dart';
 import 'forgot_pw_page.dart';
-import 'profile/profile_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -55,8 +55,13 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.of(context).pop();
           Navigator.pushReplacement(
             currentContext,
-            MaterialPageRoute(builder: (context) => const ProfilePage()),
+            MaterialPageRoute(builder: (context) => Home()),
           );
+        }
+        if (mounted) {
+          setState(() {
+
+        });
         }
       } else {
         if (mounted) Navigator.of(context).pop();
@@ -99,14 +104,13 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        // resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xFFADBC8D),
         body: Stack(
           children: [
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/images/background.png'),
+                  image: AssetImage('assets/images/background.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -114,10 +118,6 @@ class _LoginPageState extends State<LoginPage> {
             Form(
               key: _key,
               child: Center(
-                // child: ListView(
-                // keyboardDismissBehavior:
-                // ScrollViewKeyboardDismissBehavior.onDrag,
-                // child: SingleChildScrollView(
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
 
                       // logo
                       const Image(
-                        image: AssetImage('lib/images/logo.png'),
+                        image: AssetImage('assets/images/logo.png'),
                         width: 125.0,
                         height: 125,
                       ),
@@ -179,11 +179,6 @@ class _LoginPageState extends State<LoginPage> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a password';
                           }
-                          // if (!RegExp(
-                          //         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                          //     .hasMatch(value)) {
-                          //   return 'Please enter a correct Password';
-                          // }
                           return null;
                         },
                         onSaved: (value) {
@@ -273,13 +268,10 @@ class _LoginPageState extends State<LoginPage> {
                           // google button
                           SquareTile(
                               labelText: 'Sign in with Google',
-                              onTap: () => AuthService().signInWithGoogle(),
-                              imagePath: 'lib/images/google.png'),
-
-                          // const SizedBox(width: 25),
-
-                          // apple button
-                          // SquareTile(onTap: () {}, imagePath: 'lib/images/apple.png')
+                              onTap: () async {
+                                await AuthService().signInWithGoogle(context);
+                              },
+                              imagePath: 'assets/images/google.png'),
                         ],
                       ),
 
@@ -309,8 +301,6 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       )
                     ],
-                    // ),
-                    // ),
                   ),
                 ),
               ),
@@ -322,29 +312,3 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-// String? validateEmail(String? formEmail) {
-//   if (formEmail == null || formEmail.isEmpty) {
-//     return 'E-mail address is required.';
-//   }
-//   String pattern = r'\w+@\w+\.\w+';
-//   RegExp regex = RegExp(pattern);
-//   if (!regex.hasMatch(formEmail)) return 'Invalid E-mail Address format.';
-//   return null;
-// }
-//
-// String? validatePassword(String? formPassword) {
-//   if (formPassword == null || formPassword.isEmpty) {
-//     return 'Password is required.';
-//   }
-//
-//   String pattern =
-//       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~\).{8,}$';
-//   RegExp regex = RegExp(pattern);
-//   if (!regex.hasMatch(formPassword)) {
-//     return '''
-//   Password must be at least 8 characters,
-//   inclue an uppercase letter, number and symbol.
-//   ''';
-//   }
-//   return null;
-// }
