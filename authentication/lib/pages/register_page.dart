@@ -23,9 +23,10 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   // text editing controllers
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+
+
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
   final userRepo = Get.put(UserRepository());
@@ -36,7 +37,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
-    // Dispose your controllers here
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -70,10 +70,12 @@ class _RegisterPageState extends State<RegisterPage> {
           phoneNo: null,
           profilePicture: null,
         );
-        createUser(user);
 
+        createUser(user);
         emailController.clear();
         passwordController.clear();
+        confirmPasswordController.clear();
+
 
         // Navigate to the profile page and replace the current screen
         Navigator.pushReplacement(
@@ -95,52 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
       showErrorMessage('An error occurred. Please try again.');
     }
   }
-  // // sign user up method
-  // void signUserUp() async {
-  //   //show loading circle
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return const Center(
-  //         child: CircularProgressIndicator(),
-  //       );
-  //     },
-  //   );
-  //   //try creating the user
-  //   try {
-  //     //check if password is confirmed
-  //     if (_key.currentState!.validate()) {
-  //       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //         email: emailController.text,
-  //         password: passwordController.text,
-  //       );
-  //       final user = UserModel(
-  //           email: emailController.text.trim(),
-  //           password: passwordController.text.trim(),
-  //           fullName: "User",
-  //           phoneNo: null);
-  //       createUser(user);
-  //       emailController.clear();
-  //       passwordController.clear();
-  //       Navigator.pushReplacement(
-  //         context,
-  //         MaterialPageRoute(builder: (context) => ProfilePage()),
-  //       );
-  //       // if (mounted) Navigator.of(context).pop();
-  //     } else {
-  //       Navigator.of(context).pop();
-  //       showErrorMessage("An error occurred. Please try again.");
-  //     }
-  //   } on FirebaseAuthException catch (e) {
-  //     if (mounted) Navigator.of(context).pop();
-  //     // show error message
-  //     showErrorMessage(_mapFirebaseErrorCode(e.code));
-  //   } catch (e) {
-  //     if (mounted) Navigator.of(context).pop();
-  //     // catch any other exceptions and show a generic error message
-  //     showErrorMessage('An error occurred. Please try again.');
-  //   }
-  // }
+
 
   // Helper function to map Firebase error codes to user-friendly messages
   String _mapFirebaseErrorCode(String code) {
@@ -154,7 +111,8 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-// Show error message in a dialog
+  // Show error message in a dialog
+
   void showErrorMessage(String message) {
     if (mounted) {
       showDialog(
@@ -256,7 +214,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           if (!RegExp(
                                   r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
                               .hasMatch(value)) {
-                            return 'Please enter a valid Password (Min 8 chars, Mix of \nuppercase, lowercase, numbers, and symbols)';
+                            return 'Please enter a valid Password (Min 8 chars, Mix of'
+                                '\nuppercase, lowercase, numbers, and symbols)';
+
                           }
                           return null;
                         },

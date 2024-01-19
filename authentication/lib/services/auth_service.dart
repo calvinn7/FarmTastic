@@ -30,6 +30,7 @@ class AuthService {
           await FirebaseAuth.instance.signInWithCredential(credential);
       // Access the authenticated user
       final User user = authResult.user!;
+
       for (final providerProfile in user.providerData) {
 
         final UserModel userModel = UserModel(
@@ -45,13 +46,7 @@ class AuthService {
             .get();
 
         if (userSnapshot.docs.isEmpty) {
-          // User doesn't exist in Firestore, create a new user record
-          // final UserModel userModel = UserModel(
-          //   email: user.email!,
-          //   fullName: user.displayName ?? "User",
-          //   phoneNo: null,
-          //   profilePicture:
-          // );
+
           await userRepo.createUser(userModel);
         }
       }

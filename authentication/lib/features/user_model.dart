@@ -14,7 +14,7 @@ class UserModel {
     required this.phoneNo,
     required this.profilePicture,
   });
-// static UserModel empty() => UserModel(id: '', fullName: '', phoneNo:'', profilePicture:'',email: '')
+
   Map<String, dynamic> toJson() {
     return {
       "FullName": fullName,

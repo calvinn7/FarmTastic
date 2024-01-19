@@ -58,6 +58,12 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute(builder: (context) => Home()),
           );
         }
+        if (mounted) {
+          setState(() {
+
+        });
+        }
+
       } else {
         if (mounted) Navigator.of(context).pop();
         showErrorMessage("An error occurred. Please try again.");
@@ -99,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        // resizeToAvoidBottomInset: false,
+
         backgroundColor: const Color(0xFFADBC8D),
         body: Stack(
           children: [
@@ -114,10 +120,7 @@ class _LoginPageState extends State<LoginPage> {
             Form(
               key: _key,
               child: Center(
-                // child: ListView(
-                // keyboardDismissBehavior:
-                // ScrollViewKeyboardDismissBehavior.onDrag,
-                // child: SingleChildScrollView(
+
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -179,11 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a password';
                           }
-                          // if (!RegExp(
-                          //         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                          //     .hasMatch(value)) {
-                          //   return 'Please enter a correct Password';
-                          // }
+
                           return null;
                         },
                         onSaved: (value) {
@@ -278,10 +277,6 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               imagePath: 'assets/images/google.png'),
 
-                          // const SizedBox(width: 25),
-
-                          // apple button
-                          // SquareTile(onTap: () {}, imagePath: 'lib/images/apple.png')
                         ],
                       ),
 
@@ -311,8 +306,6 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       )
                     ],
-                    // ),
-                    // ),
                   ),
                 ),
               ),
@@ -324,29 +317,4 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-// String? validateEmail(String? formEmail) {
-//   if (formEmail == null || formEmail.isEmpty) {
-//     return 'E-mail address is required.';
-//   }
-//   String pattern = r'\w+@\w+\.\w+';
-//   RegExp regex = RegExp(pattern);
-//   if (!regex.hasMatch(formEmail)) return 'Invalid E-mail Address format.';
-//   return null;
-// }
-//
-// String? validatePassword(String? formPassword) {
-//   if (formPassword == null || formPassword.isEmpty) {
-//     return 'Password is required.';
-//   }
-//
-//   String pattern =
-//       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~\).{8,}$';
-//   RegExp regex = RegExp(pattern);
-//   if (!regex.hasMatch(formPassword)) {
-//     return '''
-//   Password must be at least 8 characters,
-//   inclue an uppercase letter, number and symbol.
-//   ''';
-//   }
-//   return null;
-// }
+

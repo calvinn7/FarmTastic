@@ -4,6 +4,9 @@ import 'package:farmtastic/authentication/repository/authentication_repository/u
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../pages/auth_page.dart';
+import '../pages/login_or_register_page.dart';
+
 
 class ProfileController extends GetxController {
   static ProfileController get instance => Get.find();
@@ -60,56 +63,44 @@ class ProfileController extends GetxController {
 
   Future<void> deleteAccount(UserModel usermodel, String userEmail,
       String userPassword, BuildContext context) async {
-    AuthCredential credential =
-        EmailAuthProvider.credential(email: userEmail, password: userPassword);
 
     try {
-      // Re-authenticate the user
-
       // Get the currently signed-in user
-      User? user = FirebaseAuth.instance.currentUser;
-      bool signedInWithGoogle = isUserSignedInWithGoogle(user);
-      if (signedInWithGoogle) {
-        await user?.delete();
-        await _userRepo.removeUserRecord(usermodel.id!);
-        await FirebaseAuth.instance.signOut();
-        return update();
-      }
-      await user?.reauthenticateWithCredential(credential);
-      if (user != null) {
-        // Delete the user account
-        await user.delete();
-        await _userRepo.removeUserRecord(usermodel.id!);
-        // Navigator.of(context).pushReplacement(
-        //   MaterialPageRoute(builder: (context) => LoginOrRegisterPage()),
-        // );
-        print('User account deleted successfully.');
-        // Show success snackbar
-        // ScaffoldMessenger.of(context!).showSnackBar(
-        //   SnackBar(
-        //     content: Text('User account deleted successfully!'),
-        //     duration: Duration(seconds: 3),
-        //     backgroundColor: Colors.green,
-        //   ),
-        // );
-        // Navigator.of(context!).pushReplacement(
-        //   MaterialPageRoute(builder: (context) => LoginOrRegisterPage()),
-        // );
-      } else {
-        print('No user signed in.');
-        // Navigator.of(context!).pop();
-      }
+      final user = FirebaseAuth.instance.currentUser;
+      AuthCredential credential = EmailAuthProvider.credential(
+          email: userEmail, password: userPassword);
+
+      // Re-authenticate the user
+      await user!.reauthenticateWithCredential(credential);
+      await _userRepo.removeUserRecord(usermodel.id!);
+      await user.delete();
+      await FirebaseAuth.instance.signOut();
+
+      print('User account deleted successfully.');
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const AuthPage(),
+        ),
+      );
+
+      // Display a success message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Account deleted successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
     } catch (e) {
-      throw 'Error deleting account: $e';
-      // print('Error deleting account: $e');
-      // ScaffoldMessenger.of(context!).showSnackBar(
-      //   SnackBar(
-      //     content: Text('Error deleting account: $e'),
-      //     duration: Duration(seconds: 3),
-      //     backgroundColor: Colors.red,
-      //   ),
-      // );
-      // Navigator.of(context!).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting account: $e'),
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.red,
+        ),
+      );
+      Navigator.of(context).pop();
+
+
     }
   }
 

@@ -1,4 +1,4 @@
-import 'package:farmtastic/authentication/pages/profile_page.dart';
+import 'package:farmtastic/main/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'login_or_register_page.dart';
@@ -14,7 +14,8 @@ class AuthPage extends StatelessWidget {
         builder: (context, snapshot) {
           // user is logged in
           if (snapshot.hasData) {
-            return const ProfilePage();
+            return Home();
+
           }
           // user is NOT logged in
           else {
