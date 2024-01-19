@@ -4,9 +4,9 @@ import 'package:farmtastic/authentication/repository/authentication_repository/u
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../pages/auth_page.dart';
 import '../pages/login_or_register_page.dart';
+
 
 class ProfileController extends GetxController {
   static ProfileController get instance => Get.find();
@@ -63,6 +63,7 @@ class ProfileController extends GetxController {
 
   Future<void> deleteAccount(UserModel usermodel, String userEmail,
       String userPassword, BuildContext context) async {
+
     try {
       // Get the currently signed-in user
       final user = FirebaseAuth.instance.currentUser;
@@ -98,6 +99,7 @@ class ProfileController extends GetxController {
         ),
       );
       Navigator.of(context).pop();
+
 
     }
   }

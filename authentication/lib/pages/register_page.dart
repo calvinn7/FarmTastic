@@ -26,6 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
+
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
 
   final userRepo = Get.put(UserRepository());
@@ -44,6 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void signUserUp() async {
     BuildContext currentContext = context;
+
     // Show loading circle
     showDialog(
       context: currentContext,
@@ -53,6 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       },
     );
+
     try {
       // Check if password is confirmed
       if (_key.currentState!.validate()) {
@@ -60,6 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
           email: emailController.text,
           password: passwordController.text,
         );
+
         final user = UserModel(
           email: emailController.text.trim(),
           fullName: "User",
@@ -71,6 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
         emailController.clear();
         passwordController.clear();
         confirmPasswordController.clear();
+
 
         // Navigate to the profile page and replace the current screen
         Navigator.pushReplacement(
@@ -93,6 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+
   // Helper function to map Firebase error codes to user-friendly messages
   String _mapFirebaseErrorCode(String code) {
     switch (code) {
@@ -106,6 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   // Show error message in a dialog
+
   void showErrorMessage(String message) {
     if (mounted) {
       showDialog(
@@ -209,6 +216,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               .hasMatch(value)) {
                             return 'Please enter a valid Password (Min 8 chars, Mix of'
                                 '\nuppercase, lowercase, numbers, and symbols)';
+
                           }
                           return null;
                         },
@@ -230,10 +238,12 @@ class _RegisterPageState extends State<RegisterPage> {
                           if (value == null || value.isEmpty) {
                             return 'Please re-enter password';
                           }
+
                           if (passwordController.text !=
                               confirmPasswordController.text) {
                             return "Password does not match";
                           }
+
                           return null;
                         },
                         onSaved: (value) {

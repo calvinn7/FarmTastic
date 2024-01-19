@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 
 import '../../features/user_model.dart';
@@ -23,11 +24,13 @@ class UserRepository extends GetxController {
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.redAccent.withOpacity(0.1),
       colorText: Colors.red);
+
       print("ERROR - $error");
     });
   }
 
   ///Function to retrieve user details from Firestore
+
   Future<UserModel> getUserDetails(String email) async {
     final snapshot =
         await _db.collection("Users").where("Email", isEqualTo: email).get();
@@ -35,6 +38,7 @@ class UserRepository extends GetxController {
     return userData;
   }
   ///Function to retrieve all user data from Firestore
+
   Future<List<UserModel>> allUser() async {
     final snapshot = await _db.collection("Users").get();
     final userData =
@@ -43,6 +47,7 @@ class UserRepository extends GetxController {
   }
 
   ///Function to update user data from Firestore
+
   Future<void> updateUserRecord(UserModel user) async {
     await _db.collection("Users").doc(user.id).update(user.toJson());
   }

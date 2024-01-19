@@ -1,5 +1,6 @@
 import 'package:farmtastic/authentication/features/profile_controller.dart';
 import 'package:farmtastic/authentication/pages/about_app_page.dart';
+
 import 'package:farmtastic/authentication/pages/login_or_register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +11,12 @@ import '../../main/sidebar.dart';
 import '../features/profile_menu.dart';
 import '../features/user_model.dart';
 import 'auth_page.dart';
+
 import 'update_profile_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
+
 
   // Sign user out method
   void signUserOut(BuildContext context) async {
@@ -23,6 +26,7 @@ class ProfilePage extends StatelessWidget {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const AuthPage(),
+
         ),
       );
     } catch (e) {
@@ -49,6 +53,7 @@ class ProfilePage extends StatelessWidget {
               onPressed: () {
                 // Confirm button pressed, perform logout
                 signUserOut(context);
+
               },
               child: const Text('Log out'),
             ),
@@ -88,6 +93,7 @@ class ProfilePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
+
           padding: const EdgeInsets.all(20.0),
           child: FutureBuilder(
             future: controller.getUserData(),
@@ -96,6 +102,7 @@ class ProfilePage extends StatelessWidget {
                 if (snapshot.hasData) {
                   return Builder(builder: (context) {
                     return Column(children: [
+
                           SizedBox(
                             width: 100,
                             height: 100,
@@ -122,6 +129,7 @@ class ProfilePage extends StatelessWidget {
                             ),
                           ),
                       const SizedBox(height: 10),
+
                       Obx(() {
                         UserModel? userData =
                             ProfileController.instance.userData.value;
@@ -134,6 +142,7 @@ class ProfilePage extends StatelessWidget {
                           // Handle case where user data is null
                           return const CircularProgressIndicator();
                         }
+
                       }),
                       Obx(() {
                         UserModel? userData =
@@ -147,6 +156,7 @@ class ProfilePage extends StatelessWidget {
                           return const CircularProgressIndicator();
                         }
                       }),
+
                       const SizedBox(height: 20),
                       SizedBox(
                         width: 200,
@@ -184,6 +194,7 @@ class ProfilePage extends StatelessWidget {
                           title: "FAQ",
                           icon: LineAwesomeIcons.question,
                           onPress: () {
+
                           }),
                       ProfileMenuWidget(
                           title: "Feedback",
@@ -208,6 +219,7 @@ class ProfilePage extends StatelessWidget {
                               ),
                             );
                           }),
+
                       ProfileMenuWidget(
                           title: "Logout",
                           icon: Icons.logout,

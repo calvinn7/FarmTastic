@@ -63,6 +63,7 @@ class _LoginPageState extends State<LoginPage> {
 
         });
         }
+
       } else {
         if (mounted) Navigator.of(context).pop();
         showErrorMessage("An error occurred. Please try again.");
@@ -104,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+
         backgroundColor: const Color(0xFFADBC8D),
         body: Stack(
           children: [
@@ -118,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
             Form(
               key: _key,
               child: Center(
+
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -179,6 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a password';
                           }
+
                           return null;
                         },
                         onSaved: (value) {
@@ -272,6 +276,7 @@ class _LoginPageState extends State<LoginPage> {
                                 await AuthService().signInWithGoogle(context);
                               },
                               imagePath: 'assets/images/google.png'),
+
                         ],
                       ),
 
@@ -311,4 +316,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
 

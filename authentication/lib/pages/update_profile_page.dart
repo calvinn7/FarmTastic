@@ -1,5 +1,6 @@
 import 'package:farmtastic/authentication/features/profile_controller.dart';
 import 'package:farmtastic/authentication/features/user_model.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -17,6 +18,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final passwordController = TextEditingController();
   late ProfileController controller; // Declare the controller
 
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +29,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF9FFDF),
+
       appBar: AppBar(
         backgroundColor: Color(0xFFF9FFDF),
         elevation: 0,
@@ -48,6 +51,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           fontWeight: FontWeight.w900, // Set the font weight
         ),
       ),
+
       body: SingleChildScrollView(
         child: Container(
             padding: const EdgeInsets.all(20.0),
@@ -64,6 +68,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         TextEditingController(text: userData.fullName);
                     final phoneNo =
                         TextEditingController(text: userData.phoneNo);
+
                     return Column(children: [
                       Stack(
                         children: [
@@ -80,6 +85,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                       'assets/images/sheep.png',
                                       fit: BoxFit.cover,
                                     ),
+
                             ),
                           ),
                           Positioned(
@@ -107,6 +113,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                             children: [
                               TextFormField(
                                 controller: fullName,
+
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(80),
@@ -126,6 +133,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                               ),
                               TextFormField(
                                 controller: phoneNo,
+
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(80),
@@ -168,6 +176,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                               const SizedBox(
                                 height: 20,
                               ),
+
                               const SizedBox(
                                 height: 20,
                               ),
@@ -176,6 +185,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     UserModel? user = controller.userData.value;
+
                                     final userData = UserModel(
                                         id: id.text,
                                         email: email.text.trim(),
@@ -185,6 +195,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
                                     await controller.updateRecord(
                                         userData, context);
+
                                     // Indicate success and close the page
                                     Navigator.pop(context, true);
                                   },
@@ -209,12 +220,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                     onPressed: () {
                                       UserModel? user =
                                           controller.userData.value;
+
                                       final userData = UserModel(
                                           id: id.text,
                                           email: email.text.trim(),
                                           fullName: fullName.text.trim(),
                                           phoneNo: phoneNo.text.trim(),
                                           profilePicture: user?.profilePicture);
+
                                       showDialog(
                                         context: context,
                                         builder: (context) {
@@ -307,6 +320,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                                       emailController.clear();
                                                       passwordController
                                                           .clear();
+
                                                     }
                                                   }
                                                 },
@@ -357,6 +371,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                                         ),
                                       );
                                       */
+
                                     },
                                     style: ElevatedButton.styleFrom(
                                         backgroundColor:
@@ -390,3 +405,4 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     );
   }
 }
+

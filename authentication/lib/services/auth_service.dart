@@ -32,6 +32,7 @@ class AuthService {
       final User user = authResult.user!;
 
       for (final providerProfile in user.providerData) {
+
         final UserModel userModel = UserModel(
             email: user.email!,
             fullName: providerProfile.displayName ?? "User",
@@ -45,6 +46,7 @@ class AuthService {
             .get();
 
         if (userSnapshot.docs.isEmpty) {
+
           await userRepo.createUser(userModel);
         }
       }

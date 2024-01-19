@@ -7,6 +7,7 @@ class AuthenticationRepository extends GetxController {
   final _auth = FirebaseAuth.instance;
   late final Rx<User?> firebaseUser;
 
+
   @override
   void onInit() {
     // Initialize the firebaseUser variable here
@@ -14,4 +15,5 @@ class AuthenticationRepository extends GetxController {
     firebaseUser.bindStream(_auth.userChanges());
     super.onInit();
   }
+
 }
